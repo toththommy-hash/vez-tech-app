@@ -20,7 +20,27 @@
     .badge-intezkedes { background-color: #fd7e14; color: #fff; }
     .table-row-esedekes { background-color: rgba(220, 53, 69, 0.1) !important; }
     .table-row-felfuggesztett { background-color: rgba(13, 110, 253, 0.08) !important; }
-    .person-checkbox-group { max-height: 140px; overflow-y: auto; border: 1px solid #dee2e6; padding: 8px 12px; border-radius: 6px; background-color: #fff; }
+
+    /* Lenyíló Checkbox Dropdown Stílus */
+    .dropdown-check-btn {
+      text-align: left;
+      background-color: #fff;
+      border: 1px solid #ced4da;
+      color: #212529;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dropdown-check-btn:focus { box-shadow: none; border-color: #86b7fe; }
+    .dropdown-check-menu {
+      max-height: 250px;
+      overflow-y: auto;
+      width: 100%;
+      padding: 8px 12px;
+    }
+    .dropdown-check-menu .form-check {
+      margin-bottom: 6px;
+    }
   </style>
 </head>
 <body>
@@ -52,24 +72,54 @@
               </select>
             </div>
             
-            <div class="col-md-4">
+            <!-- Lenyíló Többes Kiválasztó Menü -->
+            <div class="col-md-5">
               <label class="form-label fw-bold">Felelős(ök) / Műszerész(ek)</label>
-              <div class="person-checkbox-group" id="muszereszGroup">
-                <div class="form-check">
-                  <input class="form-check-input worker-chk" type="checkbox" value="Tóth Tamás" id="chk1">
-                  <label class="form-check-label" for="chk1">Tóth Tamás</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input worker-chk" type="checkbox" value="Krasznai Iván" id="chk2">
-                  <label class="form-check-label" for="chk2">Krasznai Iván</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input worker-chk" type="checkbox" value="Debreczeni Tibor" id="chk3">
-                  <label class="form-check-label" for="chk3">Debreczeni Tibor</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input worker-chk" type="checkbox" value="Csötönyi Tamás" id="chk4">
-                  <label class="form-check-label" for="chk4">Csötönyi Tamás</label>
+              <div class="dropdown">
+                <button class="btn dropdown-check-btn w-100 dropdown-toggle" type="button" id="dropdownWorkerBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                  Válassz felelős(öket)...
+                </button>
+                <div class="dropdown-menu dropdown-check-menu shadow" aria-labelledby="dropdownWorkerBtn">
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Debreczeni Tibor (10179672)" id="chk1" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk1">Debreczeni Tibor (10179672)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Inger József (10045721)" id="chk2" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk2">Inger József (10045721)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Józsa Gábor (10201179)" id="chk3" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk3">Józsa Gábor (10201179)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Krasznai Iván (10076817)" id="chk4" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk4">Krasznai Iván (10076817)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Pálosi Attila (10152758)" id="chk5" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk5">Pálosi Attila (10152758)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Tóth Péter (10233400)" id="chk6" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk6">Tóth Péter (10233400)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Tóth Tamás (10149403)" id="chk7" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk7">Tóth Tamás (10149403)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Vonya István (10913705)" id="chk8" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk8">Vonya István (10913705)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Balázs Bálint (26001084)" id="chk9" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk9">Balázs Bálint (26001084)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input worker-chk" type="checkbox" value="Kovács Szabolcs (10226025)" id="chk10" onchange="updateWorkerBtnText()">
+                    <label class="form-check-label" for="chk10">Kovács Szabolcs (10226025)</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -79,8 +129,8 @@
               <input type="text" class="form-control" id="mut" placeholder="Pl. MUT-2026-001">
             </div>
 
-            <div class="col-md-3">
-              <label for="alfanumerika" class="form-label fw-bold">Alfanumerikus Azonosító</label>
+            <div class="col-md-2">
+              <label for="alfanumerika" class="form-label fw-bold">Alfanumerika</label>
               <input type="text" class="form-control" id="alfanumerika" placeholder="Pl. 10LBA10AA001">
             </div>
 
@@ -144,7 +194,6 @@
         <button class="btn btn-sm btn-outline-light" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Frissítés</button>
       </div>
       <div class="card-body">
-        <!-- Szűrők -->
         <div class="row g-2 mb-3">
           <div class="col-md-3">
             <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Keresés MUT, Alfanumerika, Név..." onkeyup="filterData()">
@@ -201,6 +250,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     let rawData = [];
 
@@ -208,6 +258,16 @@
       document.getElementById("datum").valueAsDate = new Date();
       loadData();
     });
+
+    function updateWorkerBtnText() {
+      const selected = Array.from(document.querySelectorAll('.worker-chk:checked')).map(cb => cb.value.split(" (")[0]);
+      const btn = document.getElementById("dropdownWorkerBtn");
+      if (selected.length === 0) {
+        btn.innerText = "Válassz felelős(öket)...";
+      } else {
+        btn.innerText = selected.join(", ");
+      }
+    }
 
     function toggleIntezkedesInput() {
       const chk = document.getElementById("intezkedesReq");
@@ -344,7 +404,6 @@
     document.getElementById("workOrderForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      // Kiválasztott nevek összegyűjtése
       const selectedWorkers = Array.from(document.querySelectorAll('.worker-chk:checked')).map(cb => cb.value);
       if (selectedWorkers.length === 0) {
         alert("Kérjük, válasszon ki legalább egy felelőst/műszerészt!");
@@ -373,7 +432,6 @@
         megjegyzes: finalMegjegyzes
       };
 
-      // Garancia-biztos adatküldés (no-cors)
       fetch(APPS_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
@@ -384,6 +442,7 @@
         alert("Munkalap adatai elküldve a táblázatba!");
         document.getElementById("workOrderForm").reset();
         document.querySelectorAll('.worker-chk').forEach(cb => cb.checked = false);
+        updateWorkerBtnText();
         document.getElementById("datum").valueAsDate = new Date();
         toggleIntezkedesInput();
         setTimeout(loadData, 1500);
