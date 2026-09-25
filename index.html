@@ -2,77 +2,401 @@
 <html lang="hu">
 <head>
   <meta charset="UTF-8">
-  <title>Teszt Csatlakozás</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Műszerész Munkanyilvántartó</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script>
+    // Google Apps Script Web App URL
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUGJPmkn6nZBf7FMscyS1lVDDFIn2isxKOWHIMJVhn4ypivKlTq7DfDwb-T/exec";
+  </script>
+  <style>
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .card-custom { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .badge-status-folyamatban { background-color: #ffc107; color: #000; }
+    .badge-status-befejezett { background-color: #198754; color: #fff; }
+    .badge-status-felfuggesztett { background-color: #0d6efd; color: #fff; }
+    .badge-status-esedekes { background-color: #dc3545; color: #fff; }
+    .badge-intezkedes { background-color: #fd7e14; color: #fff; }
+    .table-row-esedekes { background-color: rgba(220, 53, 69, 0.1) !important; }
+    .table-row-felfuggesztett { background-color: rgba(13, 110, 253, 0.08) !important; }
+    .person-checkbox-group { max-height: 140px; overflow-y: auto; border: 1px solid #dee2e6; padding: 8px 12px; border-radius: 6px; background-color: #fff; }
+  </style>
 </head>
-<body class="p-4 bg-light">
-  <div class="container" style="max-width: 600px;">
-    <div class="card shadow-sm p-4">
-      <h4 class="mb-3">Google Apps Script Kapcsolat Teszt</h4>
-      
-      <div class="mb-3">
-        <label class="form-label fw-bold">PIN Kód:</label>
-        <input type="text" id="pin" class="form-control" value="1234">
+<body>
+
+  <nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1"><i class="bi bi-tools me-2"></i>Műszerész Munkanyilvántartó</span>
+    </div>
+  </nav>
+
+  <div class="container mb-5">
+    <!-- Új Munkalap Űrlap Card -->
+    <div class="card card-custom mb-4">
+      <div class="card-header bg-primary text-white fw-bold">
+        <i class="bi bi-plus-circle me-2"></i>Új Munkalap Rögzítése
       </div>
+      <div class="card-body">
+        <form id="workOrderForm">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="blokk" class="form-label fw-bold">Blokk / Terület</label>
+              <select class="form-select" id="blokk" required>
+                <option value="">Válassz...</option>
+                <option value="1. Blokk">1. Blokk</option>
+                <option value="2. Blokk">2. Blokk</option>
+                <option value="3. Blokk">3. Blokk</option>
+                <option value="4. Blokk">4. Blokk</option>
+                <option value="Közös terület">Közös terület</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Felelős(ök) / Műszerész(ek)</label>
+              <div class="person-checkbox-group" id="muszereszGroup">
+                <div class="form-check">
+                  <input class="form-check-input worker-chk" type="checkbox" value="Tóth Tamás" id="chk1">
+                  <label class="form-check-label" for="chk1">Tóth Tamás</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input worker-chk" type="checkbox" value="Krasznai Iván" id="chk2">
+                  <label class="form-check-label" for="chk2">Krasznai Iván</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input worker-chk" type="checkbox" value="Debreczeni Tibor" id="chk3">
+                  <label class="form-check-label" for="chk3">Debreczeni Tibor</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input worker-chk" type="checkbox" value="Csötönyi Tamás" id="chk4">
+                  <label class="form-check-label" for="chk4">Csötönyi Tamás</label>
+                </div>
+              </div>
+            </div>
 
-      <button id="testBtn" onclick="runTest()" class="btn btn-primary w-100 mb-3">
-        Teszt Adat Küldése (POST)
-      </button>
+            <div class="col-md-2">
+              <label for="mut" class="form-label fw-bold">MUT Szám</label>
+              <input type="text" class="form-control" id="mut" placeholder="Pl. MUT-2026-001">
+            </div>
 
-      <div class="mb-2 fw-bold">Eredmény / Napló:</div>
-      <pre id="log" class="p-3 bg-dark text-light rounded" style="min-height: 150px; white-space: pre-wrap;"></pre>
+            <div class="col-md-3">
+              <label for="alfanumerika" class="form-label fw-bold">Alfanumerikus Azonosító</label>
+              <input type="text" class="form-control" id="alfanumerika" placeholder="Pl. 10LBA10AA001">
+            </div>
+
+            <div class="col-md-3">
+              <label for="statusz" class="form-label fw-bold">Státusz</label>
+              <select class="form-select" id="statusz" required>
+                <option value="Folyamatban">🟡 Folyamatban</option>
+                <option value="Felfüggesztett">🔵 Felfüggesztett</option>
+                <option value="Befejezett">🟢 Befejezett</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label for="datum" class="form-label fw-bold">Dátum</label>
+              <input type="date" class="form-control" id="datum">
+            </div>
+
+            <div class="col-md-6 d-flex align-items-center mt-4">
+              <div class="form-check me-4">
+                <input class="form-check-input" type="checkbox" id="ciklusfigyeles">
+                <label class="form-check-label fw-bold" for="ciklusfigyeles">
+                  13 hónapos ciklusfigyelés bekapcsolása (Főjavítás)
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="intezkedesReq" onchange="toggleIntezkedesInput()">
+                <label class="form-check-label fw-bold text-warning-emphasis" for="intezkedesReq">
+                  🟧 További intézkedést igényel (más szakcsoport bevonása szükséges)
+                </label>
+              </div>
+              <input type="text" class="form-control d-none" id="intezkedesLeiras" placeholder="Adja meg a bevoltnak szánt szakcsoportot vagy az elvégzendő feladatot...">
+            </div>
+
+            <div class="col-md-12">
+              <label for="megjegyzes" class="form-label fw-bold">Megjegyzés / Elvégzett munka leírása</label>
+              <textarea class="form-control" id="megjegyzes" rows="2" placeholder="Részletek..."></textarea>
+            </div>
+
+            <div class="col-md-4">
+              <label for="pinCode" class="form-label fw-bold text-danger">PIN Kód (Jelszó)</label>
+              <input type="password" class="form-control" id="pinCode" placeholder="****" required>
+            </div>
+
+            <div class="col-md-8 d-flex align-items-end justify-content-end">
+              <button type="submit" class="btn btn-success btn-lg px-4 me-2" id="submitBtn">
+                <i class="bi bi-check-circle me-1"></i>Mentés
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Szűrők és Lista -->
+    <div class="card card-custom">
+      <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-list-task me-2"></i>Munkalapok Nyilvántartása</span>
+        <button class="btn btn-sm btn-outline-light" onclick="loadData()"><i class="bi bi-arrow-clockwise me-1"></i>Frissítés</button>
+      </div>
+      <div class="card-body">
+        <!-- Szűrők -->
+        <div class="row g-2 mb-3">
+          <div class="col-md-3">
+            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Keresés MUT, Alfanumerika, Név..." onkeyup="filterData()">
+          </div>
+          <div class="col-md-2">
+            <select id="filterBlokk" class="form-select form-select-sm" onchange="filterData()">
+              <option value="">Összes Blokk</option>
+              <option value="1. Blokk">1. Blokk</option>
+              <option value="2. Blokk">2. Blokk</option>
+              <option value="3. Blokk">3. Blokk</option>
+              <option value="4. Blokk">4. Blokk</option>
+              <option value="Közös terület">Közös terület</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="filterStatusz" class="form-select form-select-sm" onchange="filterData()">
+              <option value="">Összes Státusz</option>
+              <option value="Folyamatban">🟡 Folyamatban</option>
+              <option value="Felfüggesztett">🔵 Felfüggesztett</option>
+              <option value="Esedékes">🔴 Esedékes (13+ hó)</option>
+              <option value="Befejezett">🟢 Befejezett</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select id="filterIntezkedes" class="form-select form-select-sm" onchange="filterData()">
+              <option value="">Összes feladat</option>
+              <option value="IGEN">🟧 Csak "További intézkedést igényel"</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle" id="dataTable">
+            <thead class="table-light">
+              <tr>
+                <th>Dátum</th>
+                <th>Blokk</th>
+                <th>Műszerész(ek)</th>
+                <th>MUT</th>
+                <th>Alfanumerika</th>
+                <th>Státusz</th>
+                <th>Jelzések</th>
+                <th>Megjegyzés</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr>
+                <td colspan="8" class="text-center py-4 text-muted">Adatok betöltése...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUGJPmkn6nZBf7FMscyS1lVDDFIn2isxKOWHIMJVhn4ypivKlTq7DfDwb-T/exec";
+    let rawData = [];
 
-    function log(msg) {
-      const el = document.getElementById("log");
-      el.textContent += "[" + new Date().toLocaleTimeString() + "] " + msg + "\n";
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("datum").valueAsDate = new Date();
+      loadData();
+    });
+
+    function toggleIntezkedesInput() {
+      const chk = document.getElementById("intezkedesReq");
+      const input = document.getElementById("intezkedesLeiras");
+      if (chk.checked) {
+        input.classList.remove("d-none");
+        input.required = true;
+      } else {
+        input.classList.add("d-none");
+        input.required = false;
+        input.value = "";
+      }
     }
 
-    function runTest() {
-      const btn = document.getElementById("testBtn");
+    function isOver13Months(dateString) {
+      if (!dateString) return false;
+      const recordDate = new Date(dateString);
+      const now = new Date();
+      const diffMonths = (now.getFullYear() - recordDate.getFullYear()) * 12 + (now.getMonth() - recordDate.getMonth());
+      return diffMonths >= 13;
+    }
+
+    function loadData() {
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("IDE_ILLESZD_BE")) {
+        document.getElementById("tableBody").innerHTML = `<tr><td colspan="8" class="text-center text-danger fw-bold">Beállítási hiba!</td></tr>`;
+        return;
+      }
+
+      fetch(APPS_SCRIPT_URL)
+        .then(res => res.json())
+        .then(response => {
+          if (response.status === "success") {
+            rawData = response.data;
+            renderTable(rawData);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-muted">Nincs megjeleníthető adat.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+
+        let statusz = item.Státusz || "Folyamatban";
+        let statuszBadge = "";
+        let rowClass = "";
+
+        const isCycleChecked = item.Ciklusfigyelés === "IGEN" || item.Ciklusfigyelés === true;
+        const over13 = isCycleChecked && isOver13Months(item.Dátum) && statusz !== "Befejezett";
+
+        if (over13) {
+          statuszBadge = `<span class="badge badge-status-esedekes">🔴 Esedékes (>13 hó)</span>`;
+          rowClass = "table-row-esedekes";
+        } else if (statusz === "Befejezett") {
+          statuszBadge = `<span class="badge badge-status-befejezett">🟢 Befejezett</span>`;
+        } else if (statusz === "Felfüggesztett") {
+          statuszBadge = `<span class="badge badge-status-felfuggesztett">🔵 Felfüggesztett</span>`;
+          rowClass = "table-row-felfuggesztett";
+        } else {
+          statuszBadge = `<span class="badge badge-status-folyamatban">🟡 Folyamatban</span>`;
+        }
+
+        let badges = [];
+        if (isCycleChecked) {
+          badges.push(`<span class="badge bg-secondary">13H Ciklus</span>`);
+        }
+        
+        let megjegyzesText = item.Megjegyzés || "";
+        if (megjegyzesText.includes("[TOVÁBBI INTÉZKEDÉS]:")) {
+          badges.push(`<span class="badge badge-intezkedes">🟧 Intézkedés</span>`);
+        }
+
+        tr.className = rowClass;
+        tr.innerHTML = `
+          <td>${item.Dátum || ""}</td>
+          <td><strong>${item.Blokk || ""}</strong></td>
+          <td>${item.Műszerész || "-"}</td>
+          <td><code>${item.MUT || "-"}</code></td>
+          <td><code>${item.Alfanumerika || "-"}</code></td>
+          <td>${statuszBadge}</td>
+          <td>${badges.join(" ")}</td>
+          <td>${megjegyzesText}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterData() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const blokk = document.getElementById("filterBlokk").value;
+      const statusz = document.getElementById("filterStatusz").value;
+      const intezkedes = document.getElementById("filterIntezkedes").value;
+
+      const filtered = rawData.filter(item => {
+        const matchesSearch = (item.MUT || "").toLowerCase().includes(search) ||
+                              (item.Alfanumerika || "").toLowerCase().includes(search) ||
+                              (item.Megjegyzés || "").toLowerCase().includes(search) ||
+                              (item.Műszerész || "").toLowerCase().includes(search);
+
+        const matchesBlokk = !blokk || item.Blokk === blokk;
+        
+        const isCycleChecked = item.Ciklusfigyelés === "IGEN" || item.Ciklusfigyelés === true;
+        const over13 = isCycleChecked && isOver13Months(item.Dátum) && item.Státusz !== "Befejezett";
+        
+        let matchesStatusz = true;
+        if (statusz === "Esedékes") {
+          matchesStatusz = over13;
+        } else if (statusz) {
+          matchesStatusz = item.Státusz === statusz;
+        }
+
+        let matchesIntezkedes = true;
+        if (intezkedes === "IGEN") {
+          matchesIntezkedes = (item.Megjegyzés || "").includes("[TOVÁBBI INTÉZKEDÉS]:");
+        }
+
+        return matchesSearch && matchesBlokk && matchesStatusz && matchesIntezkedes;
+      });
+
+      renderTable(filtered);
+    }
+
+    document.getElementById("workOrderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // Kiválasztott nevek összegyűjtése
+      const selectedWorkers = Array.from(document.querySelectorAll('.worker-chk:checked')).map(cb => cb.value);
+      if (selectedWorkers.length === 0) {
+        alert("Kérjük, válasszon ki legalább egy felelőst/műszerészt!");
+        return;
+      }
+
+      const btn = document.getElementById("submitBtn");
       btn.disabled = true;
-      document.getElementById("log").textContent = "";
-      
-      log("Kapcsolódás indítása a Google Apps Scripthez...");
-      log("URL: " + APPS_SCRIPT_URL);
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span>Mentés...`;
+
+      let finalMegjegyzes = document.getElementById("megjegyzes").value;
+      if (document.getElementById("intezkedesReq").checked) {
+        const leiras = document.getElementById("intezkedesLeiras").value;
+        finalMegjegyzes = `[TOVÁBBI INTÉZKEDÉS]: ${leiras} | ` + finalMegjegyzes;
+      }
 
       const payload = {
-        pin: document.getElementById("pin").value,
-        blokk: "Teszt Blokk",
-        muszeresz: "Teszt Elek",
-        mut: "TEST-001",
-        alfanumerika: "TEST-123",
-        statusz: "Folyamatban",
-        datum: new Date().toISOString().split('T')[0],
-        ciklusfigyeles: false,
-        megjegyzes: "Automata teszt üzenet"
+        pin: document.getElementById("pinCode").value,
+        blokk: document.getElementById("blokk").value,
+        muszeresz: selectedWorkers.join(", "),
+        mut: document.getElementById("mut").value,
+        alfanumerika: document.getElementById("alfanumerika").value,
+        statusz: document.getElementById("statusz").value,
+        datum: document.getElementById("datum").value,
+        ciklusfigyeles: document.getElementById("ciklusfigyeles").checked,
+        megjegyzes: finalMegjegyzes
       };
 
+      // Garancia-biztos adatküldés (no-cors)
       fetch(APPS_SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(payload)
       })
-      .then(res => {
-        log("Válasz státusz kód: " + res.status + " " + res.statusText);
-        return res.json();
-      })
-      .then(data => {
-        log("Sikeres válasz érkezett a szervertől:");
-        log(JSON.stringify(data, null, 2));
+      .then(() => {
+        alert("Munkalap adatai elküldve a táblázatba!");
+        document.getElementById("workOrderForm").reset();
+        document.querySelectorAll('.worker-chk').forEach(cb => cb.checked = false);
+        document.getElementById("datum").valueAsDate = new Date();
+        toggleIntezkedesInput();
+        setTimeout(loadData, 1500);
       })
       .catch(err => {
-        log("HIBA TÖRTÉNT:");
-        log(err.toString());
-        log("Tipp: Ha 'Failed to fetch' hiba van, a Google Apps Script 'Who has access' beállítása nem 'Anyone'.");
+        alert("Hálózati hiba történt!");
+        console.error(err);
       })
       .finally(() => {
         btn.disabled = false;
+        btn.innerHTML = `<i class="bi bi-check-circle me-1"></i>Mentés`;
       });
-    }
+    });
   </script>
 </body>
 </html>
