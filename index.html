@@ -12,7 +12,7 @@
   
   <script>
     // Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwz1_UTVE5vgZNZdgCWgTbO4kXbiobfEsfCzXc11tVqMFxkIBZGC-CjVxv4Pn79ONNEtQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDjfDsOCHp9f1m9DW9kVgt9tBWLGd0qJMwg0Zca1n7cVDCrKXUGyC8D7BfECELVhJFvw/exec";
     // Oldal belépési PIN kód
     const SITE_PIN = "1234";
   </script>
@@ -332,7 +332,7 @@
 
               <div class="mb-3">
                 <label for="alfanumerika" class="form-label fw-semibold">Alfanumerikus kód / Pozíció</label>
-                <input type="text" class="form-control" id="alfanumerika" placeholder="Pl. 10LBA10AA001" required>
+                <input type="text" class="form-control text-uppercase" id="alfanumerika" placeholder="Pl. 10LBA10AA001" required>
               </div>
 
               <div class="mb-3">
@@ -343,15 +343,6 @@
                   <option value="Javításra vár">Javításra vár</option>
                   <option value="További intézkedést igényel">További intézkedést igényel</option>
                 </select>
-              </div>
-
-              <div class="mb-3 switch-box">
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="checkbox" id="ciklusfigyeles">
-                  <label class="form-check-label fw-bold" for="ciklusfigyeles">
-                    MUT ütemezés köv. főjavításra
-                  </label>
-                </div>
               </div>
 
               <div class="mb-4">
@@ -521,6 +512,15 @@
               </select>
             </div>
 
+            <div class="mb-3 switch-box">
+              <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" id="updateCiklusfigyeles">
+                <label class="form-check-label fw-bold" for="updateCiklusfigyeles">
+                  MUT ütemezés köv. főjavításra
+                </label>
+              </div>
+            </div>
+
             <div class="mb-4">
               <label for="updateNote" class="form-label fw-semibold">Kiegészítő Megjegyzés (Opcionális)</label>
               <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. MUT beszerelve, mérés sikeres..."></textarea>
@@ -552,17 +552,23 @@
       const searchInput = document.getElementById('searchInput');
       const filterBlokk = document.getElementById('filterBlokk');
       const tableBody = document.getElementById('tableBody');
+      const alfanumerikaInput = document.getElementById('alfanumerika');
       
       const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
       const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
       let globalData = [];
+
+      // Automatikus nagybetűsítés az Alfanumerikus mezőben
+      alfanumerikaInput.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+      });
 
       // PIN ellenőrzés belépéskor
       pinForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (pinInput.value === SITE_PIN) {
           pinOverlay.style.display = 'none';
-          loadTableData(); // Belépés után töltjük be az adatokat
+          loadTableData();
         } else {
           pinError.classList.remove('d-none');
           pinInput.value = '';
@@ -570,7 +576,7 @@
         }
       });
 
-      // MEGAKADÁLYOZZA AZ AUTOMATIKUS BEKÜLDÉST CSIPPANTÁSKOR (Enter nyomásakor)
+      // MEGAKADÁLYOZZA AZ AUTOMATIKUS BEKÜLDÉST CSIPPANTÁSKOR
       form.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
           e.preventDefault();
@@ -614,6 +620,9 @@
           const muszereszText = row.muszeresz ? 
             `<div class="tech-names-text"><i class="bi bi-people me-1 text-secondary"></i>${row.muszeresz}</div>` : '';
 
+          const isCiklus = (row.ciklusfigyeles === "Igen" || row.ciklusfigyeles === true);
+          const ciklusBadge = isCiklus ? '<span class="badge bg-info text-dark ms-1" title="Ütemezve főjavításra"><i class="bi bi-clock-history"></i> FJ</span>' : '';
+
           tr.innerHTML = `
             <td>
               <div class="fw-bold">${row.datum || '-'}</div>
@@ -621,7 +630,7 @@
               <small class="text-muted">${row.blokk ? row.blokk + '. Blokk' : '-'}</small>
             </td>
             <td>
-              <div class="fw-bold text-primary">${row.mut || '-'}</div>
+              <div class="fw-bold text-primary">${row.mut || '-'}${ciklusBadge}</div>
               <div class="small text-muted fw-semibold">${row.alfanumerika || '-'}</div>
               ${muszereszText}
             </td>
@@ -641,7 +650,6 @@
           tableBody.appendChild(tr);
         });
 
-        // Eseménykezelők
         document.querySelectorAll('.view-btn').forEach(btn => {
           btn.addEventListener('click', function() {
             showDetails(parseInt(this.getAttribute('data-row')));
@@ -695,6 +703,7 @@
         document.getElementById('updateRowIndex').value = rowIndex;
         document.getElementById('updateMutTitle').value = item.mut + " (" + item.alfanumerika + ")";
         document.getElementById('newStatusz').value = item.statusz || "Elvégezve";
+        document.getElementById('updateCiklusfigyeles').checked = (item.ciklusfigyeles === "Igen" || item.ciklusfigyeles === true);
         document.getElementById('updateNote').value = "";
 
         updateStatusModal.show();
@@ -706,6 +715,7 @@
 
         const rowIndex = document.getElementById('updateRowIndex').value;
         const newStatusz = document.getElementById('newStatusz').value;
+        const ciklus = document.getElementById('updateCiklusfigyeles').checked;
         const note = document.getElementById('updateNote').value;
 
         fetch(APPS_SCRIPT_URL, {
@@ -716,6 +726,7 @@
             action: "updateStatus",
             rowIndex: parseInt(rowIndex),
             statusz: newStatusz,
+            ciklusfigyeles: ciklus,
             megjegyzes: note
           })
         })
@@ -731,7 +742,6 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Kipipált munkavégzők összegyűjtése
         const checkedTechs = Array.from(document.querySelectorAll('.tech-check:checked'))
                                   .map(cb => cb.value)
                                   .join(', ');
@@ -750,9 +760,8 @@
           blokk: document.getElementById('blokk').value,
           muszeresz: checkedTechs,
           mut: document.getElementById('mut').value,
-          alfanumerika: document.getElementById('alfanumerika').value,
+          alfanumerika: document.getElementById('alfanumerika').value.toUpperCase(),
           statusz: document.getElementById('statusz').value,
-          ciklusfigyeles: document.getElementById('ciklusfigyeles').checked,
           megjegyzes: document.getElementById('megjegyzes').value
         };
 
@@ -767,7 +776,6 @@
           alertBox.innerHTML = "<i class='bi bi-check-circle-fill me-2'></i>Sikeres rögzítés!";
           alertBox.classList.remove('d-none');
           
-          // Form alaphelyzetbe állítása
           form.reset();
           document.querySelectorAll('.tech-check').forEach(cb => cb.checked = false);
 
@@ -785,7 +793,7 @@
         });
       });
 
-      // Egyszerűsített törlés (csak 1 rákiáltás/megerősítés)
+      // Egyszerűsített törlés
       function deleteRow(rowIndex) {
         if (confirm("Biztosan törölni szeretné ezt a munkalapot a nyilvántartásból?")) {
           fetch(APPS_SCRIPT_URL, {
