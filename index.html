@@ -12,7 +12,9 @@
   
   <script>
     // Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzs_TQkDVNsdTkb-2RQ7dpmMVHvXEoTcZTEtNbHNQ9b5pNAUIy71b9gXYBAUQeF12_O6Q/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwz1_UTVE5vgZNZdgCWgTbO4kXbiobfEsfCzXc11tVqMFxkIBZGC-CjVxv4Pn79ONNEtQ/exec";
+    // Oldal belépési PIN kód
+    const SITE_PIN = "1234";
   </script>
 
   <style>
@@ -30,6 +32,30 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+
+    /* PIN Lock képernyő */
+    #pinOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pin-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
     }
 
     .main-header {
@@ -122,6 +148,7 @@
       padding: 0.8rem 1rem;
     }
 
+    /* Munkavégzők jól látható jelölőnégyzetei */
     .tech-checkbox-list {
       max-height: 180px;
       overflow-y: auto;
@@ -132,12 +159,34 @@
     }
 
     .tech-checkbox-item {
-      padding: 0.25rem 0;
+      padding: 0.35rem 0;
       border-bottom: 1px dashed #f0f0f0;
+      display: flex;
+      align-items: center;
     }
 
     .tech-checkbox-item:last-child {
       border-bottom: none;
+    }
+
+    .tech-checkbox-item .form-check-input {
+      width: 1.25em;
+      height: 1.25em;
+      margin-right: 0.6em;
+      cursor: pointer;
+      border: 2px solid #6c757d;
+      flex-shrink: 0;
+    }
+
+    .tech-checkbox-item .form-check-input:checked {
+      background-color: var(--primary-blue);
+      border-color: var(--primary-blue);
+    }
+
+    .tech-checkbox-item .form-check-label {
+      cursor: pointer;
+      font-size: 0.95rem;
+      user-select: none;
     }
 
     .note-box {
@@ -168,6 +217,23 @@
 </head>
 <body>
 
+  <!-- PIN Kód Védő Képernyő -->
+  <div id="pinOverlay">
+    <div class="pin-card">
+      <div class="text-primary fs-1 mb-2"><i class="bi bi-shield-lock-fill"></i></div>
+      <h4 class="fw-bold mb-2">Bejelentkezés</h4>
+      <p class="text-muted small mb-3">Adja meg a belépési PIN kódot a felület eléréséhez!</p>
+      
+      <form id="pinForm">
+        <div class="mb-3">
+          <input type="password" id="pinInput" class="form-control form-control-lg text-center fw-bold" placeholder="PIN kód" required autofocus>
+        </div>
+        <div id="pinError" class="text-danger small mb-3 d-none"><i class="bi bi-exclamation-circle me-1"></i>Hibás PIN kód!</div>
+        <button type="submit" class="btn btn-custom-primary w-100 py-2 fs-6">Belépés</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Fejléc -->
   <header class="main-header">
     <div class="container text-center text-md-start">
@@ -178,7 +244,7 @@
         </div>
         <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
           <span class="badge bg-light text-dark fs-6 px-3 py-2 shadow-sm">
-            <i class="bi bi-shield-check text-primary me-1"></i>PIN Védett Törlés
+            <i class="bi bi-shield-check text-success me-1"></i>Védett Rendszer
           </span>
         </div>
       </div>
@@ -216,43 +282,43 @@
               <div class="mb-3">
                 <label class="form-label fw-semibold">Munkavégző(k) (Pipáld ki a neveket)</label>
                 <div class="tech-checkbox-list" id="muszereszContainer">
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="tech1">
                     <label class="form-check-label" for="tech1">Debreczeni Tibor (10179672)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Inger József (10045721)" id="tech2">
                     <label class="form-check-label" for="tech2">Inger József (10045721)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="tech3">
                     <label class="form-check-label" for="tech3">Józsa Gábor (10201179)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="tech4">
                     <label class="form-check-label" for="tech4">Krasznai Iván (10076817)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="tech5">
                     <label class="form-check-label" for="tech5">Pálosi Attila (10152758)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Tóth Péter (10233400)" id="tech6">
                     <label class="form-check-label" for="tech6">Tóth Péter (10233400)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="tech7">
                     <label class="form-check-label" for="tech7">Tóth Tamás (10149403)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Vonya István (10913705)" id="tech8">
                     <label class="form-check-label" for="tech8">Vonya István (10913705)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="tech9">
                     <label class="form-check-label" for="tech9">Balázs Bálint (26001084)</label>
                   </div>
-                  <div class="form-check tech-checkbox-item">
+                  <div class="tech-checkbox-item">
                     <input class="form-check-input tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="tech10">
                     <label class="form-check-label" for="tech10">Kovács Szabolcs (10226025)</label>
                   </div>
@@ -472,6 +538,11 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       
+      const pinOverlay = document.getElementById('pinOverlay');
+      const pinForm = document.getElementById('pinForm');
+      const pinInput = document.getElementById('pinInput');
+      const pinError = document.getElementById('pinError');
+
       const form = document.getElementById('mUKForm');
       const submitBtn = document.getElementById('submitBtn');
       const btnText = document.getElementById('btnText');
@@ -481,18 +552,30 @@
       const searchInput = document.getElementById('searchInput');
       const filterBlokk = document.getElementById('filterBlokk');
       const tableBody = document.getElementById('tableBody');
-      const mutInput = document.getElementById('mut');
       
       const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
       const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
       let globalData = [];
 
+      // PIN ellenőrzés belépéskor
+      pinForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (pinInput.value === SITE_PIN) {
+          pinOverlay.style.display = 'none';
+          loadTableData(); // Belépés után töltjük be az adatokat
+        } else {
+          pinError.classList.remove('d-none');
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      });
+
       // MEGAKADÁLYOZZA AZ AUTOMATIKUS BEKÜLDÉST CSIPPANTÁSKOR (Enter nyomásakor)
       form.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
-          e.preventDefault(); // Megállítja az azonnali beküldést
+          e.preventDefault();
           if (e.target.id === 'mut') {
-            document.getElementById('alfanumerika').focus(); // Átugrik a Pozíció mezőre
+            document.getElementById('alfanumerika').focus();
           }
         }
       });
@@ -702,24 +785,20 @@
         });
       });
 
-      // Sor törlése (PIN kódos)
+      // Egyszerűsített törlés (csak 1 rákiáltás/megerősítés)
       function deleteRow(rowIndex) {
-        const inputPin = prompt("Sor törléséhez adja meg a PIN kódot (1234):");
-        if (!inputPin) return;
-
-        if (confirm("Biztosan törölni szeretné ezt a sort a táblázatból?")) {
+        if (confirm("Biztosan törölni szeretné ezt a munkalapot a nyilvántartásból?")) {
           fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: "delete",
-              pin: inputPin,
               rowIndex: parseInt(rowIndex)
             })
           })
           .then(() => {
-            alert("Törlési kérelem elküldve!");
+            alert("Munkalap sikeresen törölve!");
             setTimeout(loadTableData, 1200);
           })
           .catch(() => alert("Hiba történt a törlés során!"));
@@ -742,8 +821,6 @@
       searchInput.addEventListener('input', filterTable);
       filterBlokk.addEventListener('change', filterTable);
       refreshBtn.addEventListener('click', loadTableData);
-
-      loadTableData();
 
     });
   </script>
