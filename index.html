@@ -42,7 +42,7 @@
       letter-spacing: -0.5px;
     }
 
-    /* Kártya és konténer stílusok */
+    /* Kártya stílusok */
     .card {
       border: none;
       border-radius: var(--card-border-radius);
@@ -60,7 +60,6 @@
       border-top-right-radius: var(--card-border-radius) !important;
     }
 
-    /* Gombok és Interaktív elemek */
     .btn-custom-primary {
       background-color: var(--primary-blue);
       color: white;
@@ -80,7 +79,7 @@
       box-shadow: 0 0 0 0.25rem rgba(0, 86, 179, 0.15);
     }
 
-    /* Táblázat stílusok */
+    /* Táblázat és Státusz Színek */
     .table-responsive {
       max-height: 520px;
       overflow-y: auto;
@@ -99,17 +98,19 @@
       padding: 0.4em 0.75em;
       border-radius: 30px;
       font-weight: 600;
+      display: inline-block;
     }
 
-    .badge-kesz { background-color: #d1e7dd; color: #0f5132; }
-    .badge-folyamatban { background-color: #fff3cd; color: #664d03; }
-    .badge-var { background-color: #f8d7da; color: #842029; }
+    /* Státusz Színek */
+    .badge-elvegezve { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+    .badge-folyamatban { background-color: #fff3cd; color: #664d03; border: 1px solid #ffecb5; }
+    .badge-javitasra-var { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+    .badge-intezkedes { background-color: #e0cffc; color: #3d0a91; border: 1px solid #c7a5f9; }
 
     .filter-card {
       border-left: 5px solid var(--primary-blue);
     }
 
-    /* Kapcsoló doboz kiemelése */
     .switch-box {
       background-color: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -165,20 +166,20 @@
                 </select>
               </div>
 
-              <!-- Munkavégző(k) kiválasztása - Multi-select -->
+              <!-- Munkavégző(k) kiválasztása - PONTOS NÉVSOR -->
               <div class="mb-3">
                 <label for="muszeresz" class="form-label fw-semibold">Munkavégző(k)</label>
                 <select class="form-select" id="muszeresz" multiple required size="6">
                   <option value="Debreczeni Tibor (10179672)">Debreczeni Tibor (10179672)</option>
-                  <option value="Műszerész 2 (10123456)">Műszerész 2 (10123456)</option>
-                  <option value="Műszerész 3 (10123457)">Műszerész 3 (10123457)</option>
-                  <option value="Műszerész 4 (10123458)">Műszerész 4 (10123458)</option>
-                  <option value="Műszerész 5 (10123459)">Műszerész 5 (10123459)</option>
-                  <option value="Műszerész 6 (10123460)">Műszerész 6 (10123460)</option>
-                  <option value="Műszerész 7 (10123461)">Műszerész 7 (10123461)</option>
-                  <option value="Műszerész 8 (10123462)">Műszerész 8 (10123462)</option>
-                  <option value="Műszerész 9 (10123463)">Műszerész 9 (10123463)</option>
-                  <option value="Műszerész 10 (10123464)">Műszerész 10 (10123464)</option>
+                  <option value="Inger József (10045721)">Inger József (10045721)</option>
+                  <option value="Józsa Gábor (10201179)">Józsa Gábor (10201179)</option>
+                  <option value="Krasznai Iván (10076817)">Krasznai Iván (10076817)</option>
+                  <option value="Pálosi Attila (10152758)">Pálosi Attila (10152758)</option>
+                  <option value="Tóth Péter (10233400)">Tóth Péter (10233400)</option>
+                  <option value="Tóth Tamás (10149403)">Tóth Tamás (10149403)</option>
+                  <option value="Vonya István (10913705)">Vonya István (10913705)</option>
+                  <option value="Balázs Bálint (26001084)">Balázs Bálint (26001084)</option>
+                  <option value="Kovács Szabolcs (10226025)">Kovács Szabolcs (10226025)</option>
                 </select>
                 <div class="form-text text-muted">Több munkavégző kijelöléséhez tartsa nyomva a <code>Ctrl</code> (vagy Mac-en <code>Cmd</code>) billentyűt.</div>
               </div>
@@ -202,6 +203,7 @@
                   <option value="Elvégezve">Elvégezve</option>
                   <option value="Folyamatban">Folyamatban</option>
                   <option value="Javításra vár">Javításra vár</option>
+                  <option value="További intézkedést igényel">További intézkedést igényel</option>
                 </select>
               </div>
 
@@ -361,7 +363,7 @@
           alertBox.innerHTML = "<i class='bi bi-check-circle-fill me-2'></i>Sikeres rögzítés! Az adatok átküldve a táblázatba.";
           alertBox.classList.remove('d-none');
           form.reset();
-          setTimeout(loadTableData, 1500); // Táblázat automatikus frissítése beküldés után
+          setTimeout(loadTableData, 1500);
         })
         .catch(err => {
           alertBox.className = "alert alert-danger mt-3 shadow-sm";
@@ -397,20 +399,20 @@
             renderTable(data);
           })
           .catch(() => {
-            // Ha a GET nincs felkészítve JSON visszaadásra, visszahullunk egy tájékoztató sorra
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted"><i class="bi bi-check2-circle text-success me-2"></i>Az adatbeküldés aktív. A nézet manuálisan a Google Sheets-ben is megtekinthető.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted"><i class="bi bi-check2-circle text-success me-2"></i>Az adatbeküldés aktív. A nézet a Google Sheets-ben frissül.</td></tr>';
           });
       }
 
-      // 3. Táblázat kirajzolása
+      // 3. Táblázat kirajzolása és Státusz Színezés
       function renderTable(data) {
         tableBody.innerHTML = '';
         data.reverse().forEach(row => {
           const tr = document.createElement('tr');
           
-          let badgeClass = 'badge-var';
-          if (row.statusz === 'Elvégezve' || row.statusz === 'Kész') badgeClass = 'badge-kesz';
+          let badgeClass = 'badge-javitasra-var';
+          if (row.statusz === 'Elvégezve' || row.statusz === 'Kész') badgeClass = 'badge-elvegezve';
           if (row.statusz === 'Folyamatban') badgeClass = 'badge-folyamatban';
+          if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
           const ciklusIcon = row.ciklusfigyeles ? 
             '<span class="badge bg-info text-dark"><i class="bi bi-clock-history me-1"></i>Igen</span>' : 
