@@ -12,7 +12,7 @@
   
   <script>
     // Google Apps Script Web App URL
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDjfDsOCHp9f1m9DW9kVgt9tBWLGd0qJMwg0Zca1n7cVDCrKXUGyC8D7BfECELVhJFvw/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJZC7_j3mjMdZpSaK0s0rT9lU5TJRUH7Uv40DzTqyMksfkvNtpXsX6knDWJyn090dGCA/exec";
     // Oldal belépési PIN kód
     const SITE_PIN = "1234";
   </script>
@@ -137,6 +137,11 @@
     .badge-javitasra-var { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
     .badge-intezkedes { background-color: #e0cffc; color: #3d0a91; border: 1px solid #c7a5f9; }
 
+    /* Késésben lévő sorkiemelés (>7 napja folyamatban) */
+    .row-overdue {
+      background-color: #fff3cd !important;
+    }
+
     .filter-card {
       border-left: 5px solid var(--primary-blue);
     }
@@ -148,7 +153,7 @@
       padding: 0.8rem 1rem;
     }
 
-    /* Munkavégzők jól látható jelölőnégyzetei */
+    /* Munkavégzők jelölőnégyzetei */
     .tech-checkbox-list {
       max-height: 180px;
       overflow-y: auto;
@@ -328,6 +333,9 @@
               <div class="mb-3">
                 <label for="mut" class="form-label fw-semibold">MUT Azonosító (Vonalkód olvasóval is)</label>
                 <input type="text" class="form-control" id="mut" placeholder="Beolvasás vagy beírás..." required>
+                <div id="mutDuplicateError" class="text-danger small mt-1 d-none fw-bold">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i>Ez a MUT azonosító már létezik a nyilvántartásban!
+                </div>
               </div>
 
               <div class="mb-3">
@@ -485,12 +493,12 @@
     </div>
   </div>
 
-  <!-- Státusz Módosítása Modal -->
+  <!-- Adatok / Státusz / Erőforrás Módosítása Modal -->
   <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow">
         <div class="modal-header bg-warning text-dark">
-          <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Státusz Módosítása</h5>
+          <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Munkalap & Erőforrás Módosítása</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
         </div>
         <div class="modal-body p-4">
@@ -502,8 +510,55 @@
               <input type="text" class="form-control bg-light" id="updateMutTitle" readonly>
             </div>
 
+            <!-- Erőforrás (Személyek) Hozzárendelése / Törlése -->
             <div class="mb-3">
-              <label for="newStatusz" class="form-label fw-semibold">Új Státusz Kiválasztása</label>
+              <label class="form-label fw-semibold"><i class="bi bi-people me-1 text-primary"></i>Munkavégzők csatolása / eltávolítása</label>
+              <div class="tech-checkbox-list" id="updateMuszereszContainer">
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1">
+                  <label class="form-check-label" for="uTech1">Debreczeni Tibor (10179672)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Inger József (10045721)" id="uTech2">
+                  <label class="form-check-label" for="uTech2">Inger József (10045721)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="uTech3">
+                  <label class="form-check-label" for="uTech3">Józsa Gábor (10201179)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="uTech4">
+                  <label class="form-check-label" for="uTech4">Krasznai Iván (10076817)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="uTech5">
+                  <label class="form-check-label" for="uTech5">Pálosi Attila (10152758)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Péter (10233400)" id="uTech6">
+                  <label class="form-check-label" for="uTech6">Tóth Péter (10233400)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="uTech7">
+                  <label class="form-check-label" for="uTech7">Tóth Tamás (10149403)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Vonya István (10913705)" id="uTech8">
+                  <label class="form-check-label" for="uTech8">Vonya István (10913705)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="uTech9">
+                  <label class="form-check-label" for="uTech9">Balázs Bálint (26001084)</label>
+                </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="uTech10">
+                  <label class="form-check-label" for="uTech10">Kovács Szabolcs (10226025)</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="newStatusz" class="form-label fw-semibold">Státusz Kiválasztása</label>
               <select class="form-select" id="newStatusz" required>
                 <option value="Elvégezve">Elvégezve (Készidő bejegyzéssel)</option>
                 <option value="Folyamatban">Folyamatban</option>
@@ -523,11 +578,11 @@
 
             <div class="mb-4">
               <label for="updateNote" class="form-label fw-semibold">Kiegészítő Megjegyzés (Opcionális)</label>
-              <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. MUT beszerelve, mérés sikeres..."></textarea>
+              <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. Munkavégző módosítva, mérés sikeres..."></textarea>
             </div>
 
             <button type="submit" class="btn btn-warning w-100 fw-bold">
-              <i class="bi bi-check2-circle me-1"></i>Státusz Frissítése
+              <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
             </button>
           </form>
         </div>
@@ -552,16 +607,38 @@
       const searchInput = document.getElementById('searchInput');
       const filterBlokk = document.getElementById('filterBlokk');
       const tableBody = document.getElementById('tableBody');
+      const mutInput = document.getElementById('mut');
+      const mutDuplicateError = document.getElementById('mutDuplicateError');
       const alfanumerikaInput = document.getElementById('alfanumerika');
       
       const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
       const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
       let globalData = [];
 
-      // Automatikus nagybetűsítés az Alfanumerikus mezőben
+      // Automatikus nagybetűsítés
       alfanumerikaInput.addEventListener('input', function() {
         this.value = this.value.toUpperCase();
       });
+
+      // DUPLIKÁCIÓ ELLENŐRZÉS BEÍRÁSKOR/CSIPPANTÁSKOR
+      function checkMutDuplicate() {
+        const currentMut = mutInput.value.trim().toLowerCase();
+        if (!currentMut) {
+          mutDuplicateError.classList.add('d-none');
+          return false;
+        }
+
+        const exists = globalData.some(item => item.mut && item.mut.toString().trim().toLowerCase() === currentMut);
+        if (exists) {
+          mutDuplicateError.classList.remove('d-none');
+          return true;
+        } else {
+          mutDuplicateError.classList.add('d-none');
+          return false;
+        }
+      }
+
+      mutInput.addEventListener('input', checkMutDuplicate);
 
       // PIN ellenőrzés belépéskor
       pinForm.addEventListener('submit', function(e) {
@@ -581,6 +658,7 @@
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
           e.preventDefault();
           if (e.target.id === 'mut') {
+            checkMutDuplicate();
             document.getElementById('alfanumerika').focus();
           }
         }
@@ -604,6 +682,19 @@
           });
       }
 
+      // Dátum különbség számítás napokban
+      function getDaysDiff(dateString) {
+        if (!dateString) return 0;
+        // Elvárás: yyyy.MM.dd. HH:mm vagy ISO string
+        const cleaned = dateString.replace(/\./g, '-').replace(' ', 'T');
+        const startDate = new Date(cleaned);
+        if (isNaN(startDate.getTime())) return 0;
+
+        const now = new Date();
+        const diffTime = Math.abs(now - startDate);
+        return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      }
+
       function renderTable(data) {
         tableBody.innerHTML = '';
         data.slice().reverse().forEach(row => {
@@ -613,6 +704,17 @@
           if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           if (row.statusz === 'Folyamatban') badgeClass = 'badge-folyamatban';
           if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
+
+          // 7 napnál régebbi "Folyamatban" státusz figyelmeztetése
+          const daysInStatus = getDaysDiff(row.datum);
+          const isOverdue = (row.statusz === 'Folyamatban' && daysInStatus >= 7);
+
+          if (isOverdue) {
+            tr.classList.add('row-overdue');
+          }
+
+          const overdueBadge = isOverdue ? 
+            `<span class="badge bg-danger text-white ms-1" title="Több mint 7 napja folyamatban van!"><i class="bi bi-exclamation-triangle-fill"></i> >7 napja folyamatban</span>` : '';
 
           const befejezesText = row.befejezesDatum && row.befejezesDatum !== "-" ? 
             `<div class="small text-success"><i class="bi bi-check-all me-1"></i>Kész: ${row.befejezesDatum}</div>` : '';
@@ -634,12 +736,15 @@
               <div class="small text-muted fw-semibold">${row.alfanumerika || '-'}</div>
               ${muszereszText}
             </td>
-            <td><span class="status-badge ${badgeClass}">${row.statusz || '-'}</span></td>
+            <td>
+              <span class="status-badge ${badgeClass}">${row.statusz || '-'}</span>
+              ${overdueBadge}
+            </td>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-primary me-1 view-btn" data-row="${row.rowIndex}" title="Részletek">
                 <i class="bi bi-eye"></i>
               </button>
-              <button class="btn btn-sm btn-outline-warning me-1 edit-status-btn" data-row="${row.rowIndex}" title="Státusz módosítása">
+              <button class="btn btn-sm btn-outline-warning me-1 edit-status-btn" data-row="${row.rowIndex}" title="Módosítás">
                 <i class="bi bi-pencil-square"></i>
               </button>
               <button class="btn btn-sm btn-outline-danger delete-btn" data-row="${row.rowIndex}" title="Törlés">
@@ -706,10 +811,16 @@
         document.getElementById('updateCiklusfigyeles').checked = (item.ciklusfigyeles === "Igen" || item.ciklusfigyeles === true);
         document.getElementById('updateNote').value = "";
 
+        // Meglévő munkavégzők bekészítése a módosító ablakban
+        const currentTechs = item.muszeresz ? item.muszeresz.split(',').map(s => s.trim()) : [];
+        document.querySelectorAll('.update-tech-check').forEach(cb => {
+          cb.checked = currentTechs.includes(cb.value);
+        });
+
         updateStatusModal.show();
       }
 
-      // Státusz frissítés beküldése
+      // Adatok / Státusz / Erőforrás frissítése
       document.getElementById('updateStatusForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -717,6 +828,16 @@
         const newStatusz = document.getElementById('newStatusz').value;
         const ciklus = document.getElementById('updateCiklusfigyeles').checked;
         const note = document.getElementById('updateNote').value;
+
+        // Frissített munkavégzők kipipált listája
+        const updatedTechs = Array.from(document.querySelectorAll('.update-tech-check:checked'))
+                                  .map(cb => cb.value)
+                                  .join(', ');
+
+        if (!updatedTechs) {
+          alert("Kérjük, legalább egy munkavégzőt hagyjon kijelölve!");
+          return;
+        }
 
         fetch(APPS_SCRIPT_URL, {
           method: 'POST',
@@ -726,13 +847,14 @@
             action: "updateStatus",
             rowIndex: parseInt(rowIndex),
             statusz: newStatusz,
+            muszeresz: updatedTechs,
             ciklusfigyeles: ciklus,
             megjegyzes: note
           })
         })
         .then(() => {
           updateStatusModal.hide();
-          alert("Státusz sikeresen frissítve!");
+          alert("Munkalap adatai sikeresen frissítve!");
           setTimeout(loadTableData, 1200);
         })
         .catch(() => alert("Hiba történt a frissítés során!"));
@@ -742,6 +864,14 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        // 1. DUPLIKÁCIÓ ELLENŐRZÉSE
+        if (checkMutDuplicate()) {
+          alert("A megadott MUT azonosító már létezik a rendszerben! Kérjük, ellenőrizze az adatokat.");
+          mutInput.focus();
+          return;
+        }
+
+        // 2. MUNKAVÉGZŐK ELLENŐRZÉSE
         const checkedTechs = Array.from(document.querySelectorAll('.tech-check:checked'))
                                   .map(cb => cb.value)
                                   .join(', ');
@@ -759,8 +889,8 @@
         const payload = {
           blokk: document.getElementById('blokk').value,
           muszeresz: checkedTechs,
-          mut: document.getElementById('mut').value,
-          alfanumerika: document.getElementById('alfanumerika').value.toUpperCase(),
+          mut: document.getElementById('mut').value.trim(),
+          alfanumerika: document.getElementById('alfanumerika').value.toUpperCase().trim(),
           statusz: document.getElementById('statusz').value,
           megjegyzes: document.getElementById('megjegyzes').value
         };
@@ -778,6 +908,7 @@
           
           form.reset();
           document.querySelectorAll('.tech-check').forEach(cb => cb.checked = false);
+          mutDuplicateError.classList.add('d-none');
 
           setTimeout(loadTableData, 1500);
         })
@@ -793,7 +924,7 @@
         });
       });
 
-      // Egyszerűsített törlés
+      // Sor törlése
       function deleteRow(rowIndex) {
         if (confirm("Biztosan törölni szeretné ezt a munkalapot a nyilvántartásból?")) {
           fetch(APPS_SCRIPT_URL, {
