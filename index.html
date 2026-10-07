@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBlywdR4-P2lats3BxgvgAaJGESExQ91Vv8TRrbsjfhjKuvHv_BePmTuJzN3V1p3-48Q/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxcWapCC9PZpnd01qTlPwekgaarwjlp_glD1Z2KbQjNU1a30hZaHzHTLACIe0mX_6jhQ/exec";
     const SITE_PIN = "1234";
   </script>
 
@@ -32,7 +32,7 @@
       flex-direction: column;
     }
 
-    /* Szélesebb konténer a jobb átláthatóságért */
+    /* Széles konténer az átláthatóságért */
     .container-fluid-custom {
       width: 96%;
       max-width: 1800px;
@@ -101,7 +101,7 @@
       color: white;
     }
 
-    /* Megnövelt magasságú táblázat konténer */
+    /* 750px magas táblázat konténer */
     .table-responsive {
       max-height: 750px;
       overflow-y: auto;
@@ -132,9 +132,16 @@
     .badge-javitasra-var { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
     .badge-intezkedes { background-color: #e0cffc; color: #3d0a91; border: 1px solid #c7a5f9; }
 
-    /* Lejárt határidejű sor kiemelése */
+    /* Lejárt határidejű sor kiemelése (Piros) */
     .row-overdue {
       background-color: #ffe6e6 !important;
+      border-left: 5px solid #dc3545 !important;
+    }
+
+    /* Elért FJ Értesítési Dátum kiemelése (Kék/Lila) */
+    .row-fj-due {
+      background-color: #e8f4fe !important;
+      border-left: 5px solid #0d6efd !important;
     }
 
     .filter-card {
@@ -324,7 +331,7 @@
                 </div>
               </div>
 
-              <!-- Automatikus / maszkolás a 8. karakter után -->
+              <!-- Automatikus / maszkolás 8 karakter után -->
               <div class="mb-3">
                 <label for="mut" class="form-label fw-semibold">MUT Azonosító (Pl. 07779298/02)</label>
                 <input type="text" class="form-control" id="mut" placeholder="00000000/00" maxlength="11" required>
@@ -354,6 +361,20 @@
                 <input type="date" class="form-control" id="hatarido">
               </div>
 
+              <!-- Főjavítási Kapcsoló és Értesítési Dátum -->
+              <div class="mb-3 switch-box">
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="ciklusfigyeles">
+                  <label class="form-check-label fw-bold" for="ciklusfigyeles">
+                    MUT ütemezés köv. főjavításra
+                  </label>
+                </div>
+                <div id="fjErtesitesContainer" class="d-none mt-2">
+                  <label for="fjErtesitesDatum" class="form-label small fw-semibold text-primary"><i class="bi bi-bell-fill me-1"></i>Értesítés dátuma (Főjavítás)</label>
+                  <input type="date" class="form-control form-control-sm" id="fjErtesitesDatum">
+                </div>
+              </div>
+
               <div class="mb-4">
                 <label for="megjegyzes" class="form-label fw-semibold">Megjegyzés</label>
                 <textarea class="form-control" id="megjegyzes" rows="2" placeholder="Méréseredmények, észrevételek..."></textarea>
@@ -366,13 +387,11 @@
 
             </form>
 
-            <div id="alertBox" class="alert mt-3 d-none" role="alert"></div>
-
           </div>
         </div>
       </div>
 
-      <!-- Jobb oldal: Szűrők és Széles Táblázat -->
+      <!-- Jobb oldal: Szűrők és Táblázat -->
       <div class="col-xl-8 col-lg-7">
         
         <div class="card filter-card">
@@ -422,7 +441,7 @@
                   <tr>
                     <th>Időbélyeg (Kezdés/Kész)</th>
                     <th>MUT / Pozíció / Munkavégzők</th>
-                    <th>Határidő</th>
+                    <th>Határidő / FJ Értesítés</th>
                     <th>Státusz</th>
                     <th class="text-center">Műveletek</th>
                   </tr>
@@ -487,7 +506,7 @@
               <div class="fw-semibold text-danger" id="modalHatarido">-</div>
             </div>
             <div class="col-md-6">
-              <label class="text-muted small">Főjavítási Ütemezés</label>
+              <label class="text-muted small">Főjavítási Ütemezés & Értesítés</label>
               <div id="modalCiklus">-</div>
             </div>
             <div class="col-md-12">
@@ -588,11 +607,15 @@
             </div>
 
             <div class="mb-3 switch-box">
-              <div class="form-check form-switch mb-0">
+              <div class="form-check form-switch mb-2">
                 <input class="form-check-input" type="checkbox" id="updateCiklusfigyeles">
                 <label class="form-check-label fw-bold" for="updateCiklusfigyeles">
                   MUT ütemezés köv. főjavításra
                 </label>
+              </div>
+              <div id="updateFjErtesitesContainer" class="d-none mt-2">
+                <label for="updateFjErtesitesDatum" class="form-label small fw-semibold text-primary"><i class="bi bi-bell-fill me-1"></i>Értesítés dátuma (Főjavítás)</label>
+                <input type="date" class="form-control form-control-sm" id="updateFjErtesitesDatum">
               </div>
             </div>
 
@@ -622,7 +645,6 @@
       const submitBtn = document.getElementById('submitBtn');
       const btnText = document.getElementById('btnText');
       const btnSpinner = document.getElementById('btnSpinner');
-      const alertBox = document.getElementById('alertBox');
       const refreshBtn = document.getElementById('refreshBtn');
       const searchInput = document.getElementById('searchInput');
       const filterBlokk = document.getElementById('filterBlokk');
@@ -631,14 +653,37 @@
       const mutInput = document.getElementById('mut');
       const mutDuplicateError = document.getElementById('mutDuplicateError');
       const alfanumerikaInput = document.getElementById('alfanumerika');
+
+      // Főjavítás kapcsoló dinamikus mező megjelenítés
+      const ciklusSwitch = document.getElementById('ciklusfigyeles');
+      const fjContainer = document.getElementById('fjErtesitesContainer');
+      ciklusSwitch.addEventListener('change', function() {
+        if (this.checked) {
+          fjContainer.classList.remove('d-none');
+        } else {
+          fjContainer.classList.add('d-none');
+          document.getElementById('fjErtesitesDatum').value = '';
+        }
+      });
+
+      const updateCiklusSwitch = document.getElementById('updateCiklusfigyeles');
+      const updateFjContainer = document.getElementById('updateFjErtesitesContainer');
+      updateCiklusSwitch.addEventListener('change', function() {
+        if (this.checked) {
+          updateFjContainer.classList.remove('d-none');
+        } else {
+          updateFjContainer.classList.add('d-none');
+          document.getElementById('updateFjErtesitesDatum').value = '';
+        }
+      });
       
       const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
       const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
       let globalData = [];
 
       // AUTOMATIKUS MUT FORMÁZÁS: 8 karakter után perjel (pl. 07779298/02)
-      mutInput.addEventListener('input', function(e) {
-        let val = this.value.replace(/[^\d]/g, ''); // Csak számok
+      mutInput.addEventListener('input', function() {
+        let val = this.value.replace(/[^\d]/g, '');
         if (val.length > 8) {
           val = val.substring(0, 8) + '/' + val.substring(8, 10);
         }
@@ -715,7 +760,27 @@
         tableBody.innerHTML = '';
         const todayStr = new Date().toISOString().split('T')[0];
 
-        data.slice().reverse().forEach(row => {
+        // PRIORITÁSI RENDEZÉS: Lejárt MUT > Elért FJ Értesítés > Egyéb időrendben
+        const sortedData = data.slice().sort((a, b) => {
+          const aIsOverdue = (a.statusz === 'Folyamatban' && a.hatarido && a.hatarido < todayStr);
+          const bIsOverdue = (b.statusz === 'Folyamatban' && b.hatarido && b.hatarido < todayStr);
+
+          const aIsFjDue = ((a.ciklusfigyeles === "Igen" || a.ciklusfigyeles === true) && a.fjErtesitesDatum && a.fjErtesitesDatum <= todayStr);
+          const bIsFjDue = ((b.ciklusfigyeles === "Igen" || b.ciklusfigyeles === true) && b.fjErtesitesDatum && b.fjErtesitesDatum <= todayStr);
+
+          // 1. Prioritás: Lejárt határidő (Piros) legelöl
+          if (aIsOverdue && !bIsOverdue) return -1;
+          if (!aIsOverdue && bIsOverdue) return 1;
+
+          // 2. Prioritás: Elért FJ értesítési dátum (Kék) másodikként
+          if (aIsFjDue && !bIsFjDue) return -1;
+          if (!aIsFjDue && bIsFjDue) return 1;
+
+          // 3. Alapértelmezett: Legújabb elöl (rowIndex szerint csökkenő)
+          return b.rowIndex - a.rowIndex;
+        });
+
+        sortedData.forEach(row => {
           const tr = document.createElement('tr');
           
           let badgeClass = 'badge-javitasra-var';
@@ -723,17 +788,28 @@
           if (row.statusz === 'Folyamatban') badgeClass = 'badge-folyamatban';
           if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
-          // Határidő ellenőrzése
+          // Késési & FJ Értesítési vizsgálat
           const hasPassedDeadline = (row.hatarido && row.hatarido < todayStr);
           const isOverdue = (row.statusz === 'Folyamatban' && hasPassedDeadline);
 
+          const isCiklus = (row.ciklusfigyeles === "Igen" || row.ciklusfigyeles === true);
+          const isFjDue = (isCiklus && row.fjErtesitesDatum && row.fjErtesitesDatum <= todayStr);
+
           if (isOverdue) {
             tr.classList.add('row-overdue');
+          } else if (isFjDue) {
+            tr.classList.add('row-fj-due');
           }
 
           const hataridoDisplay = row.hatarido ? 
             `<div class="fw-semibold ${isOverdue ? 'text-danger' : 'text-dark'}">${row.hatarido} ${isOverdue ? '<span class="badge bg-danger ms-1">⚠️ Lejárt</span>' : ''}</div>` : 
             '<small class="text-muted">-</small>';
+
+          const fjDatumDisplay = isCiklus ? (
+            row.fjErtesitesDatum ? 
+              `<div class="small ${isFjDue ? 'text-primary fw-bold' : 'text-muted'}"><i class="bi bi-clock-history me-1"></i>FJ: ${row.fjErtesitesDatum} ${isFjDue ? '<span class="badge bg-primary ms-1">⏰ FJ DÁTUM ELÉRVE</span>' : ''}</div>` : 
+              '<div class="small text-info"><i class="bi bi-clock-history me-1"></i>FJ: Dátum nélkül</div>'
+          ) : '';
 
           const befejezesText = row.befejezesDatum && row.befejezesDatum !== "-" ? 
             `<div class="small text-success"><i class="bi bi-check-all me-1"></i>Kész: ${row.befejezesDatum}</div>` : '';
@@ -741,7 +817,6 @@
           const muszereszText = row.muszeresz ? 
             `<div class="tech-names-text"><i class="bi bi-people me-1 text-secondary"></i>${row.muszeresz}</div>` : '';
 
-          const isCiklus = (row.ciklusfigyeles === "Igen" || row.ciklusfigyeles === true);
           const ciklusBadge = isCiklus ? '<span class="badge bg-info text-dark ms-1" title="Ütemezve főjavításra"><i class="bi bi-clock-history"></i> FJ</span>' : '';
 
           tr.innerHTML = `
@@ -755,7 +830,10 @@
               <div class="small text-muted fw-semibold">${row.alfanumerika || '-'}</div>
               ${muszereszText}
             </td>
-            <td>${hataridoDisplay}</td>
+            <td>
+              ${hataridoDisplay}
+              ${fjDatumDisplay}
+            </td>
             <td><span class="status-badge ${badgeClass}">${row.statusz || '-'}</span></td>
             <td class="text-center">
               <button class="btn btn-sm btn-outline-primary me-1 view-btn" data-row="${row.rowIndex}" title="Részletek">
@@ -804,8 +882,10 @@
         document.getElementById('modalMuszeresz').innerText = item.muszeresz || '-';
         
         const isCiklus = (item.ciklusfigyeles === "Igen" || item.ciklusfigyeles === true);
+        const fjDatumTxt = item.fjErtesitesDatum ? ` (Értesítés: ${item.fjErtesitesDatum})` : '';
+        
         document.getElementById('modalCiklus').innerHTML = isCiklus ? 
-          '<span class="badge bg-info text-dark"><i class="bi bi-clock-history me-1"></i>Beállítva főjavításra</span>' : 
+          `<span class="badge bg-info text-dark"><i class="bi bi-clock-history me-1"></i>Beállítva főjavításra${fjDatumTxt}</span>` : 
           '<span class="text-muted">Nincs beállítva</span>';
 
         let badgeClass = 'badge-javitasra-var';
@@ -827,7 +907,17 @@
         document.getElementById('updateMutTitle').value = item.mut + " (" + item.alfanumerika + ")";
         document.getElementById('newStatusz').value = item.statusz || "Elvégezve";
         document.getElementById('updateHatarido').value = item.hatarido || "";
-        document.getElementById('updateCiklusfigyeles').checked = (item.ciklusfigyeles === "Igen" || item.ciklusfigyeles === true);
+        
+        const isCiklus = (item.ciklusfigyeles === "Igen" || item.ciklusfigyeles === true);
+        document.getElementById('updateCiklusfigyeles').checked = isCiklus;
+        document.getElementById('updateFjErtesitesDatum').value = item.fjErtesitesDatum || "";
+        
+        if (isCiklus) {
+          updateFjContainer.classList.remove('d-none');
+        } else {
+          updateFjContainer.classList.add('d-none');
+        }
+
         document.getElementById('updateNote').value = "";
 
         const currentTechs = item.muszeresz ? item.muszeresz.split(',').map(s => s.trim()) : [];
@@ -845,6 +935,7 @@
         const rowIndex = document.getElementById('updateRowIndex').value;
         const newStatusz = document.getElementById('newStatusz').value;
         const ciklus = document.getElementById('updateCiklusfigyeles').checked;
+        const fjDatum = ciklus ? document.getElementById('updateFjErtesitesDatum').value : '';
         const note = document.getElementById('updateNote').value;
         const hatarido = document.getElementById('updateHatarido').value;
 
@@ -857,7 +948,7 @@
           return;
         }
 
-        updateStatusModal.hide(); // Azonnal bezárjuk a modalt
+        updateStatusModal.hide();
 
         fetch(APPS_SCRIPT_URL, {
           method: 'POST',
@@ -869,12 +960,13 @@
             statusz: newStatusz,
             muszeresz: updatedTechs,
             ciklusfigyeles: ciklus,
+            fjErtesitesDatum: fjDatum,
             megjegyzes: note,
             hatarido: hatarido
           })
         })
         .then(() => {
-          loadTableData(); // Automatikus frissítés kattintgatás nélkül
+          loadTableData();
         });
       });
 
@@ -897,6 +989,9 @@
           return;
         }
 
+        const ciklus = ciklusSwitch.checked;
+        const fjDatum = ciklus ? document.getElementById('fjErtesitesDatum').value : '';
+
         submitBtn.disabled = true;
         btnText.innerText = "Mentés...";
         btnSpinner.classList.remove('d-none');
@@ -908,6 +1003,8 @@
           alfanumerika: document.getElementById('alfanumerika').value.toUpperCase().trim(),
           statusz: document.getElementById('statusz').value,
           hatarido: document.getElementById('hatarido').value,
+          ciklusfigyeles: ciklus,
+          fjErtesitesDatum: fjDatum,
           megjegyzes: document.getElementById('megjegyzes').value
         };
 
@@ -920,8 +1017,9 @@
         .then(() => {
           form.reset();
           document.querySelectorAll('.tech-check').forEach(cb => cb.checked = false);
+          fjContainer.classList.add('d-none');
           mutDuplicateError.classList.add('d-none');
-          loadTableData(); // Azonnali csendes frissítés
+          loadTableData();
         })
         .finally(() => {
           submitBtn.disabled = false;
@@ -930,7 +1028,7 @@
         });
       });
 
-      // Törlés gomb (Felugró üzenet nélkül, azonnali törlés)
+      // Törlés gomb (Felugró üzenet nélkül)
       function deleteRow(rowIndex) {
         if (confirm("Törli ezt a munkalapot?")) {
           fetch(APPS_SCRIPT_URL, {
