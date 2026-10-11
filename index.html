@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8tq57J_yUxc4zWbDVWecDEKvVdcT7F6NWa082SFD9XrzPsrIAnTPL4busnGOLDo8yBQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9iZbuFcnUuY6HcSef7wS7AFW9vOsRUS80IXQhQxlMWgMHvEHRHZf1kT1eiv9UHl-B4g/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -919,8 +919,10 @@
           html += `
             <tr class="${rowClass}">
               <td>
-                <div class="fw-semibold small">${row.datum || '-'}</div>
+               <td>
+                <div class="fw-semibold small">${row.idobelyeg || row.datum || '-'}</div>
                 <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.befejezesDatum || '-'}</div>
+              </td> 
               </td>
               <td>
                 <div class="fw-bold text-primary font-monospace">${row.mut || '-'} ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}</div>
