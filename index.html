@@ -719,8 +719,6 @@
         let val = this.value.replace(/[^0-9]/g, ''); // Csak számok
         if (val.length > 8) {
           val = val.substring(0, 8) + '/' + val.substring(8, 10);
-        } else if (val.length > 6) {
-          // Ha már közelít, de hagyjuk rugalmasra
         }
         this.value = val;
 
@@ -733,7 +731,7 @@
         }
       });
 
-      // Alfanumerika első karakteréből blokk automatikus kiválasztása
+      // Alfanumerika első karakteréből blokk automatikus kitöltése
       alfanumerikaInput.addEventListener('input', function() {
         this.value = this.value.toUpperCase();
         const val = this.value.trim();
