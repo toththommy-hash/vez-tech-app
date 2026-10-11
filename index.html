@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyArN6-5HKa890odwu3edRhlTAZN-QMSqaly0VQff8BSaR838sheoMl-o4ssJTD0MsD9Q/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt7r_Ox174_QNTMbJIeOw76STRPTlml1Y29wfaES2BAGssZI98QrUM11dVKs9hluKiiQ/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -395,7 +395,7 @@
 
               <div class="mb-3">
                 <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Késési / Befejezési határidő</label>
-                <input type="date" class="form-control" id="hatarido">
+                <input type="date" class="form-control" id="hatarido" required>
               </div>
 
               <div class="mb-3 switch-box">
@@ -659,7 +659,7 @@
 
             <div class="mb-3">
               <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késési / Befejezési határidő módosítása</label>
-              <input type="date" class="form-control" id="updateHatarido">
+              <input type="date" class="form-control" id="updateHatarido" required>
             </div>
 
             <div class="mb-3 switch-box">
@@ -869,8 +869,7 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Táblázat renderelése
-// Táblázat renderelése (Intelligens rendezéssel: Lejártak -> Folyamatban lévők -> Elvégezve)
+      // Táblázat renderelése (Intelligens sorrenddel és kiemelésekkel)
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -879,26 +878,22 @@
 
         const today = new Date().toISOString().split('T')[0];
 
-        // Súlyozott rendezés a sorrend meghatározásához
+        // Súlyozott rendezés: Lejártak legelöl -> Folyamatban lévők -> Elvégzettek legalul
         const sortedData = [...data].sort((a, b) => {
           const isAOverdue = a.hatarido && a.statusz !== 'Elvégezve' && a.hatarido <= today;
           const isBOverdue = b.hatarido && b.statusz !== 'Elvégezve' && b.hatarido <= today;
 
-          // 1. A lejártak prioritása legelöl (1-es súly)
           const getPriority = (row, isOverdue) => {
             if (isOverdue) return 1;
-            if (row.statusz !== 'Elvégezve') return 2; // Folyamatban lévők középen
-            return 3; // Elvégezve legalul
+            if (row.statusz !== 'Elvégezve') return 2;
+            return 3;
           };
 
           const prioA = getPriority(a, isAOverdue);
           const prioB = getPriority(b, isBOverdue);
 
-          if (prioA !== prioB) {
-            return prioA - prioB;
-          }
+          if (prioA !== prioB) return prioA - prioB;
 
-          // Ha azonos prioritásúak (pl. mindkettő lejárt), a legközelebbi/legrégebbi határidő legyen elöl
           if (a.hatarido && b.hatarido) {
             return a.hatarido.localeCompare(b.hatarido);
           }
@@ -912,12 +907,8 @@
           else if (row.statusz === 'Javításra vár') badgeClass = 'badge-javitasra-var';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
-          // Piros kiemelés a lejárt / ma lejáró elemeknek
-          let rowClass = '';
           const isOverdue = row.hatarido && row.statusz !== 'Elvégezve' && row.hatarido <= today;
-          if (isOverdue) {
-            rowClass = 'row-overdue';
-          }
+          let rowClass = isOverdue ? 'row-overdue' : '';
 
           html += `
             <tr class="${rowClass}">
@@ -927,7 +918,7 @@
               </td>
               <td>
                 <div class="fw-bold text-primary font-monospace">${row.mut || '-'} ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}</div>
-                <div class="small font-monospace text-secondary">${row.alfanumerika || '-'} (Blokk: ${row.blokk || '-'})</div>
+                <div class="small font-monospace"><span class="fw-bold text-dark">${row.alfanumerika || '-'}</span> <span class="text-secondary">(Blokk: ${row.blokk || '-'})</span></div>
                 <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz || '-'}</div>
               </td>
               <td>
