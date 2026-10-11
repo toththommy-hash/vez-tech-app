@@ -870,23 +870,53 @@
       filterBlokk.addEventListener('change', filterData);
 
       // Táblázat renderelése
+// Táblázat renderelése (Intelligens rendezéssel: Lejártak -> Folyamatban lévők -> Elvégezve)
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
           return;
         }
 
+        const today = new Date().toISOString().split('T')[0];
+
+        // Súlyozott rendezés a sorrend meghatározásához
+        const sortedData = [...data].sort((a, b) => {
+          const isAOverdue = a.hatarido && a.statusz !== 'Elvégezve' && a.hatarido <= today;
+          const isBOverdue = b.hatarido && b.statusz !== 'Elvégezve' && b.hatarido <= today;
+
+          // 1. A lejártak prioritása legelöl (1-es súly)
+          const getPriority = (row, isOverdue) => {
+            if (isOverdue) return 1;
+            if (row.statusz !== 'Elvégezve') return 2; // Folyamatban lévők középen
+            return 3; // Elvégezve legalul
+          };
+
+          const prioA = getPriority(a, isAOverdue);
+          const prioB = getPriority(b, isBOverdue);
+
+          if (prioA !== prioB) {
+            return prioA - prioB;
+          }
+
+          // Ha azonos prioritásúak (pl. mindkettő lejárt), a legközelebbi/legrégebbi határidő legyen elöl
+          if (a.hatarido && b.hatarido) {
+            return a.hatarido.localeCompare(b.hatarido);
+          }
+          return 0;
+        });
+
         let html = '';
-        data.forEach(row => {
+        sortedData.forEach(row => {
           let badgeClass = 'badge-folyamatban';
           if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           else if (row.statusz === 'Javításra vár') badgeClass = 'badge-javitasra-var';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
+          // Piros kiemelés a lejárt / ma lejáró elemeknek
           let rowClass = '';
-          if (row.hatarido && row.statusz !== 'Elvégezve') {
-            const today = new Date().toISOString().split('T')[0];
-            if (row.hatarido < today) rowClass = 'row-overdue';
+          const isOverdue = row.hatarido && row.statusz !== 'Elvégezve' && row.hatarido <= today;
+          if (isOverdue) {
+            rowClass = 'row-overdue';
           }
 
           html += `
@@ -896,12 +926,12 @@
                 <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.befejezesDatum || '-'}</div>
               </td>
               <td>
-                <div class="fw-bold text-primary font-monospace">${row.mut || '-'}</div>
+                <div class="fw-bold text-primary font-monospace">${row.mut || '-'} ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}</div>
                 <div class="small font-monospace text-secondary">${row.alfanumerika || '-'} (Blokk: ${row.blokk || '-'})</div>
                 <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz || '-'}</div>
               </td>
               <td>
-                <div class="small"><i class="bi bi-calendar-event me-1 text-danger"></i>${row.hatarido || '-'}</div>
+                <div class="small ${isOverdue ? 'fw-bold text-danger' : ''}"><i class="bi bi-calendar-event me-1"></i>${row.hatarido || '-'}</div>
                 ${row.fjErtesitesDatum ? `<div class="small text-primary mt-1"><i class="bi bi-bell me-1"></i>FJ ért.: ${row.fjErtesitesDatum}</div>` : ''}
               </td>
               <td>
