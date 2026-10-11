@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaK7fO-rUpd6MySW1lEo0oPaMrq_wicRXbMlp4pqaWEtMgS-LSIyX44T-xvWd7X5geWw/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8tq57J_yUxc4zWbDVWecDEKvVdcT7F6NWa082SFD9XrzPsrIAnTPL4busnGOLDo8yBQ/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -1024,12 +1024,14 @@
         });
       };
 
-      // Módosítás mentése
+      // Módosítás mentése (Megerősített státuszfrissítéssel)
       const updateForm = document.getElementById('updateStatusForm');
       updateForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const rowIndex = document.getElementById('updateRowIndex').value;
+        const selectedStatusz = document.getElementById('newStatusz').value;
+        
         const selectedTechs = [];
         document.querySelectorAll('.update-tech-check:checked').forEach(cb => {
           selectedTechs.push(cb.value);
@@ -1045,12 +1047,17 @@
           rowIndex: rowIndex,
           rogzito: document.getElementById('updateRogzito').value,
           muszeresz: selectedTechs.join(', '),
-          statusz: document.getElementById('newStatusz').value,
+          statusz: selectedStatusz,
           hatarido: document.getElementById('updateHatarido').value,
           ciklusfigyeles: updateCiklusSwitch.checked ? 'Igen' : 'Nem',
           fjErtesitesDatum: document.getElementById('updateFjErtesitesDatum').value,
           megjegyzes: document.getElementById('updateNote').value
         };
+
+        // UI visszajelzés a mentés alatt
+        const submitBtn = updateForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Frissítés...';
 
         fetch(APPS_SCRIPT_URL, {
           method: 'POST',
@@ -1058,12 +1065,16 @@
         })
         .then(res => res.json())
         .then(response => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Adatok Frissítése';
           updateStatusModal.hide();
           loadData();
         })
         .catch(err => {
           console.error('Módosítási hiba:', err);
           alert('Hiba történt a módosítás során!');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Adatok Frissítése';
         });
       });
 
