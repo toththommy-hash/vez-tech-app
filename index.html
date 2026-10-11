@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzB9_zZGOUVJS7wHE-Ln7JnJEv28UVTGC20ue6BdPcP-n0nwGuYwu36wM0-j5tGKlYs8Q/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzeZ_qphlhUtdh3DmHVagGovqqblqR6hFh9kXIxg5FGlzRoc2NS1anvvBZLKdXD2hylg/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -157,11 +157,6 @@
     .badge-folyamatban { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-javitasra-var { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
     .badge-intezkedes { background-color: #f3e8ff; color: #581c87; border: 1px solid #e9d5ff; }
-
-    .row-overdue {
-      background-color: #fff5f5 !important;
-      border-left: 4px solid #ef4444 !important;
-    }
 
     .filter-card {
       border-left: 4px solid var(--tech-blue-accent);
@@ -393,21 +388,12 @@
                 </select>
               </div>
 
-              <div class="mb-3">
-                <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Késési / Befejezési határidő</label>
-                <input type="date" class="form-control" id="hatarido" required>
-              </div>
-
               <div class="mb-3 switch-box">
-                <div class="form-check form-switch mb-2">
+                <div class="form-check form-switch mb-0">
                   <input class="form-check-input" type="checkbox" id="ciklusfigyeles" style="cursor: pointer;">
                   <label class="form-check-label fw-bold small text-dark" for="ciklusfigyeles" style="cursor: pointer;">
-                    MUT ütemezés köv. főjavításra
+                    MUT ütemezés köv. főjavításra (Ciklusfigyelés)
                   </label>
-                </div>
-                <div id="fjErtesitesContainer" class="d-none mt-2">
-                  <label for="fjErtesitesDatum" class="form-label small fw-semibold text-primary"><i class="bi bi-bell-fill me-1"></i>Értesítés dátuma (Főjavítás)</label>
-                  <input type="date" class="form-control form-control-sm" id="fjErtesitesDatum">
                 </div>
               </div>
 
@@ -472,7 +458,7 @@
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="dataTable">
+              <table class="table table-hover align-middle mb-0" id="dataTable">
                 <thead>
                   <tr>
                     <th>Időbélyeg (Kezdés/Kész)</th>
@@ -483,7 +469,9 @@
                   </tr>
                 </thead>
                 <tbody id="tableBody">
-                  <!-- Adatok -->
+                  <tr>
+                    <td colspan="5" class="text-center py-5 text-muted"><span class="spinner-border spinner-border-sm me-2 text-primary"></span>Adatok betöltése...</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -528,22 +516,18 @@
               <div class="fw-semibold" id="modalBlokk">-</div>
             </div>
             <div class="col-md-6">
-              <label class="text-muted small text-uppercase fw-semibold">Kezdés Dátuma</label>
-              <div class="fw-semibold text-dark" id="modalDatum">-</div>
+              <label class="text-muted small text-uppercase fw-semibold">Kezdés Időbélyeg</label>
+              <div class="fw-semibold text-dark" id="modalIdobelyeg">-</div>
             </div>
             <div class="col-md-6">
-              <label class="text-muted small text-uppercase fw-semibold">Befejezés Dátuma</label>
-              <div class="fw-semibold text-success" id="modalBefejezesDatum">-</div>
+              <label class="text-muted small text-uppercase fw-semibold">Befejezés / Kész Idő</label>
+              <div class="fw-semibold text-success" id="modalKeszIdo">-</div>
             </div>
             <div class="col-md-6">
-              <label class="text-muted small text-uppercase fw-semibold">Késési Határidő</label>
-              <div class="fw-semibold text-danger" id="modalHatarido">-</div>
+              <label class="text-muted small text-uppercase fw-semibold">Ciklusfigyelés</label>
+              <div class="fw-semibold text-secondary" id="modalCiklus">-</div>
             </div>
             <div class="col-md-6">
-              <label class="text-muted small text-uppercase fw-semibold">Főjavítási Ütemezés & Értesítés</label>
-              <div id="modalCiklus" class="fw-semibold">-</div>
-            </div>
-            <div class="col-md-12">
               <label class="text-muted small text-uppercase fw-semibold">Utolsó rögzítő / módosító</label>
               <div class="fw-semibold text-secondary" id="modalRogzito">-</div>
             </div>
@@ -655,21 +639,12 @@
               </select>
             </div>
 
-            <div class="mb-3">
-              <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késési / Befejezési határidő módosítása</label>
-              <input type="date" class="form-control" id="updateHatarido" required>
-            </div>
-
             <div class="mb-3 switch-box">
-              <div class="form-check form-switch mb-2">
+              <div class="form-check form-switch mb-0">
                 <input class="form-check-input" type="checkbox" id="updateCiklusfigyeles" style="cursor: pointer;">
                 <label class="form-check-label fw-bold small text-dark" for="updateCiklusfigyeles" style="cursor: pointer;">
-                  MUT ütemezés köv. főjavításra
+                  MUT ütemezés köv. főjavításra (Ciklusfigyelés)
                 </label>
-              </div>
-              <div id="updateFjErtesitesContainer" class="d-none mt-2">
-                <label for="updateFjErtesitesDatum" class="form-label small fw-semibold text-primary"><i class="bi bi-bell-fill me-1"></i>Értesítés dátuma (Főjavítás)</label>
-                <input type="date" class="form-control form-control-sm" id="updateFjErtesitesDatum">
               </div>
             </div>
 
@@ -714,13 +689,12 @@
 
       // MUT szám automatikus maszkolása (/ jel az utolsó 2 karakter előtt)
       mutInput.addEventListener('input', function(e) {
-        let val = this.value.replace(/[^0-9]/g, ''); // Csak számok
+        let val = this.value.replace(/[^0-9]/g, '');
         if (val.length > 8) {
           val = val.substring(0, 8) + '/' + val.substring(8, 10);
         }
         this.value = val;
 
-        // Duplikáció ellenőrzés
         const isDuplicate = allData.some(row => String(row.mut).trim() === val);
         if (isDuplicate && val.length > 3) {
           mutDuplicateError.classList.remove('d-none');
@@ -738,29 +712,6 @@
           if (['1', '2', '3', '4'].includes(firstChar)) {
             blokkSelect.value = firstChar;
           }
-        }
-      });
-
-      // Főjavítás kapcsoló dinamikus mező megjelenítés
-      const ciklusSwitch = document.getElementById('ciklusfigyeles');
-      const fjContainer = document.getElementById('fjErtesitesContainer');
-      ciklusSwitch.addEventListener('change', function() {
-        if (this.checked) {
-          fjContainer.classList.remove('d-none');
-        } else {
-          fjContainer.classList.add('d-none');
-          document.getElementById('fjErtesitesDatum').value = '';
-        }
-      });
-
-      const updateCiklusSwitch = document.getElementById('updateCiklusfigyeles');
-      const updateFjContainer = document.getElementById('updateFjErtesitesContainer');
-      updateCiklusSwitch.addEventListener('change', function() {
-        if (this.checked) {
-          updateFjContainer.classList.remove('d-none');
-        } else {
-          updateFjContainer.classList.add('d-none');
-          document.getElementById('updateFjErtesitesDatum').value = '';
         }
       });
       
@@ -799,7 +750,7 @@
 
       refreshBtn.addEventListener('click', loadData);
 
-      // Új MUT rögzítés küldése
+      // ÚJ MUT rögzítés küldése
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -821,9 +772,7 @@
           muszeresz: selectedTechs.join(', '),
           mut: mutInput.value,
           statusz: document.getElementById('statusz').value,
-          hatarido: document.getElementById('hatarido').value,
-          ciklusfigyeles: ciklusSwitch.checked ? 'Igen' : 'Nem',
-          fjErtesitesDatum: document.getElementById('fjErtesitesDatum').value,
+          ciklusfigyeles: document.getElementById('ciklusfigyeles').checked ? 'Igen' : 'Nem',
           megjegyzes: document.getElementById('megjegyzes').value
         };
 
@@ -841,7 +790,6 @@
           btnText.classList.remove('d-none');
           btnSpinner.classList.add('d-none');
           form.reset();
-          fjContainer.classList.add('d-none');
           loadData();
         })
         .catch(err => {
@@ -873,63 +821,33 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Táblázat renderelése (Intelligens sorrenddel, kiemelésekkel és kiemelt alfanumerikával)
+      // Táblázat renderelése - SZIGORÚ SORRENDBEN: Időbélyeg, Adatok, Ciklus, Státusz, Műveletek
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
           return;
         }
 
-        const today = new Date().toISOString().split('T')[0];
-
-        // Súlyozott rendezés: Lejártak legelöl -> Folyamatban lévők -> Elvégzettek legalul
-        const sortedData = [...data].sort((a, b) => {
-          const isAOverdue = a.hatarido && a.statusz !== 'Elvégezve' && a.hatarido <= today;
-          const isBOverdue = b.hatarido && b.statusz !== 'Elvégezve' && b.hatarido <= today;
-
-          const getPriority = (row, isOverdue) => {
-            if (isOverdue) return 1;
-            if (row.statusz !== 'Elvégezve') return 2;
-            return 3;
-          };
-
-          const prioA = getPriority(a, isAOverdue);
-          const prioB = getPriority(b, isBOverdue);
-
-          if (prioA !== prioB) return prioA - prioB;
-
-          if (a.hatarido && b.hatarido) {
-            return a.hatarido.localeCompare(b.hatarido);
-          }
-          return 0;
-        });
-
         let html = '';
-        sortedData.forEach(row => {
+        data.forEach(row => {
           let badgeClass = 'badge-folyamatban';
           if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           else if (row.statusz === 'Javításra vár') badgeClass = 'badge-javitasra-var';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
-          const isOverdue = row.hatarido && row.statusz !== 'Elvégezve' && row.hatarido <= today;
-          let rowClass = isOverdue ? 'row-overdue' : '';
-
           html += `
-            <tr class="${rowClass}">
+            <tr>
               <td>
-               <td>
-                <div class="fw-semibold small">${row.idobelyeg || row.datum || '-'}</div>
-                <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.befejezesDatum || '-'}</div>
-              </td> 
+                <div class="fw-semibold small">${row.idobelyeg || '-'}</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.keszIdobelyeg || '-'}</div>
               </td>
               <td>
-                <div class="fw-bold text-primary font-monospace">${row.mut || '-'} ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}</div>
+                <div class="fw-bold text-primary font-monospace">${row.mut || '-'}</div>
                 <div class="font-monospace text-dark fs-6 fw-bold my-1">${row.alfanumerika || '-'} <span class="text-secondary fw-normal small">(Blokk: ${row.blokk || '-'})</span></div>
                 <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz || '-'}</div>
               </td>
               <td>
-                <div class="small ${isOverdue ? 'fw-bold text-danger' : ''}"><i class="bi bi-calendar-event me-1"></i>${row.hatarido || '-'}</div>
-                ${row.fjErtesitesDatum ? `<div class="small text-primary mt-1"><i class="bi bi-bell me-1"></i>FJ ért.: ${row.fjErtesitesDatum}</div>` : ''}
+                <div class="small text-secondary"><i class="bi bi-clock-history me-1"></i>${row.ciklusfigyeles || 'Nem'}</div>
               </td>
               <td>
                 <span class="status-badge ${badgeClass}">${row.statusz || 'Folyamatban'}</span>
@@ -956,14 +874,9 @@
         document.getElementById('modalStatusz').innerHTML = `<span class="status-badge badge-folyamatban">${row.statusz || '-'}</span>`;
         document.getElementById('modalAlfanumerika').textContent = row.alfanumerika || '-';
         document.getElementById('modalBlokk').textContent = (row.blokk || '-') + '. Blokk';
-        document.getElementById('modalDatum').textContent = row.datum || '-';
-        document.getElementById('modalBefejezesDatum').textContent = row.befejezesDatum || '-';
-        document.getElementById('modalHatarido').textContent = row.hatarido || 'Nincs megadva';
-        
-        let ciklusText = row.ciklusfigyeles === 'Igen' ? 'Bekapcsolva' : 'Nincs';
-        if (row.fjErtesitesDatum) ciklusText += ` (Értesítés: ${row.fjErtesitesDatum})`;
-        document.getElementById('modalCiklus').textContent = ciklusText;
-
+        document.getElementById('modalIdobelyeg').textContent = row.idobelyeg || '-';
+        document.getElementById('modalKeszIdo').textContent = row.keszIdobelyeg || 'Nincs készre jelentve';
+        document.getElementById('modalCiklus').textContent = row.ciklusfigyeles || 'Nem';
         document.getElementById('modalRogzito').textContent = row.rogzito || '-';
         document.getElementById('modalMuszeresz').textContent = row.muszeresz || '-';
         document.getElementById('modalMegjegyzes').textContent = row.megjegyzes || 'Nincs megjegyzés fűzve.';
@@ -979,21 +892,12 @@
         document.getElementById('updateRowIndex').value = row.rowIndex;
         document.getElementById('updateMutTitle').value = row.mut || '';
         document.getElementById('newStatusz').value = row.statusz || 'Folyamatban';
-        document.getElementById('updateHatarido').value = row.hatarido || '';
         
         document.querySelectorAll('.update-tech-check').forEach(cb => {
           cb.checked = row.muszeresz && row.muszeresz.includes(cb.value.split(' (')[0]);
         });
 
-        updateCiklusSwitch.checked = row.ciklusfigyeles === 'Igen';
-        if (updateCiklusSwitch.checked) {
-          updateFjContainer.classList.remove('d-none');
-          document.getElementById('updateFjErtesitesDatum').value = row.fjErtesitesDatum || '';
-        } else {
-          updateFjContainer.classList.add('d-none');
-          document.getElementById('updateFjErtesitesDatum').value = '';
-        }
-
+        document.getElementById('updateCiklusfigyeles').checked = row.ciklusfigyeles === 'Igen';
         document.getElementById('updateNote').value = '';
 
         updateStatusModal.show();
@@ -1024,7 +928,7 @@
         });
       };
 
-      // Módosítás mentése (Megerősített státuszfrissítéssel)
+      // Módosítás mentése
       const updateForm = document.getElementById('updateStatusForm');
       updateForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1048,13 +952,10 @@
           rogzito: document.getElementById('updateRogzito').value,
           muszeresz: selectedTechs.join(', '),
           statusz: selectedStatusz,
-          hatarido: document.getElementById('updateHatarido').value,
-          ciklusfigyeles: updateCiklusSwitch.checked ? 'Igen' : 'Nem',
-          fjErtesitesDatum: document.getElementById('updateFjErtesitesDatum').value,
+          ciklusfigyeles: document.getElementById('updateCiklusfigyeles').checked ? 'Igen' : 'Nem',
           megjegyzes: document.getElementById('updateNote').value
         };
 
-        // UI visszajelzés a mentés alatt
         const submitBtn = updateForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Frissítés...';
