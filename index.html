@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj9yZGCO_oi3iWzXkyjCBr8bfqt0RFHWYtyXtxwNkagHn44Bq3eaUVmdreJX5qT4kalw/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9C2rxKcqnTFF3Esz3kOOvRoADXBU08WCjsen0XewvFYhOo1Yn8Na790D97Zft-2E5DA/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -136,15 +136,20 @@
       display: inline-block;
     }
 
+    .badge-beerkezett { background-color: #fef08a; color: #713f12; border: 1px solid #fde047; }
+    .badge-folyamatban { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
     .badge-elvegezve { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .badge-folyamatban { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-javitasra-var { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
     .badge-intezkedes { background-color: #f3e8ff; color: #581c87; border: 1px solid #e9d5ff; }
 
-    /* Lejárt határidejű sor piros kiemelése */
+    /* Sorkiemelések */
     .row-overdue {
       background-color: #fff5f5 !important;
       border-left: 4px solid #ef4444 !important;
+    }
+    .row-beerkezett {
+      background-color: #fefce8 !important;
+      border-left: 4px solid #eab308 !important;
     }
 
     .filter-card {
@@ -251,12 +256,12 @@
   <main class="container-fluid-custom mb-5">
     <div class="row">
       
-      <!-- Bal oldal: Adatrögzítő Űrlap -->
+      <!-- Bal oldal: Adatrögzítő Űrlap (Beérkezés) -->
       <div class="col-xl-4 col-lg-5">
         <div class="card">
           <div class="card-header d-flex align-items-center">
             <i class="bi bi-plus-circle-fill text-primary fs-5 me-2"></i>
-            <span>Új MUT rögzítése</span>
+            <span>Új MUT beérkezés / rögzítés</span>
           </div>
           <div class="card-body p-4">
             
@@ -280,7 +285,7 @@
               </div>
 
               <div class="mb-3">
-                <label for="alfanumerika" class="form-label fw-semibold small text-muted text-uppercase">Alfanumerika</label>
+                <label for="alfanumerika" class="form-label fw-semibold small text-muted text-uppercase">Alfanumerika <span class="text-danger">*</span></label>
                 <input type="text" class="form-control text-uppercase font-monospace" id="alfanumerika" placeholder="Pl. 40UJ23S201" required>
               </div>
 
@@ -297,53 +302,7 @@
               </div>
 
               <div class="mb-3">
-                <label class="form-label fw-semibold small text-muted text-uppercase">Munkavégző(k)</label>
-                <div class="tech-checkbox-list" id="muszereszContainer">
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="tech1">
-                    <label class="form-check-label" for="tech1">Debreczeni Tibor (10179672)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Inger József (10045721)" id="tech2">
-                    <label class="form-check-label" for="tech2">Inger József (10045721)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="tech3">
-                    <label class="form-check-label" for="tech3">Józsa Gábor (10201179)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="tech4">
-                    <label class="form-check-label" for="tech4">Krasznai Iván (10076817)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="tech5">
-                    <label class="form-check-label" for="tech5">Pálosi Attila (10152758)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Tóth Péter (10233400)" id="tech6">
-                    <label class="form-check-label" for="tech6">Tóth Péter (10233400)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="tech7">
-                    <label class="form-check-label" for="tech7">Tóth Tamás (10149403)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Vonya István (10913705)" id="tech8">
-                    <label class="form-check-label" for="tech8">Vonya István (10913705)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="tech9">
-                    <label class="form-check-label" for="tech9">Balázs Bálint (26001084)</label>
-                  </div>
-                  <div class="tech-checkbox-item">
-                    <input class="form-check-input tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="tech10">
-                    <label class="form-check-label" for="tech10">Kovács Szabolcs (10226025)</label>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="mut" class="form-label fw-semibold small text-muted text-uppercase">MUT szám</label>
+                <label for="mut" class="form-label fw-semibold small text-muted text-uppercase">MUT szám <span class="text-danger">*</span></label>
                 <input type="text" class="form-control font-monospace" id="mut" placeholder="00000000/00" maxlength="11" required>
                 <div id="mutDuplicateError" class="text-danger small mt-1 d-none fw-bold">
                   <i class="bi bi-exclamation-triangle-fill me-1"></i>Ez a MUT szám már létezik!
@@ -351,18 +310,7 @@
               </div>
 
               <div class="mb-3">
-                <label for="statusz" class="form-label fw-semibold small text-muted text-uppercase">Státusz</label>
-                <select class="form-select" id="statusz" required>
-                  <option value="Elvégezve">Elvégezve</option>
-                  <option value="Folyamatban" selected>Folyamatban</option>
-                  <option value="Javításra vár">Javításra vár</option>
-                  <option value="További intézkedést igényel">További intézkedést igényel</option>
-                </select>
-              </div>
-
-              <!-- VISSZAÁLLÍTVA: Kötelező Késési / Befejezési Határidő dátum -->
-              <div class="mb-3">
-                <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Késési / Befejezési határidő</label>
+                <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Lejárat / Határidő <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="hatarido" required>
               </div>
 
@@ -376,12 +324,12 @@
               </div>
 
               <div class="mb-4">
-                <label for="megjegyzes" class="form-label fw-semibold small text-muted text-uppercase">Megjegyzés</label>
-                <textarea class="form-control" id="megjegyzes" rows="2" placeholder="Méréseredmények, észrevételek..."></textarea>
+                <label for="megjegyzes" class="form-label fw-semibold small text-muted text-uppercase">Megjegyzés / Hibanapló infó</label>
+                <textarea class="form-control" id="megjegyzes" rows="2" placeholder="Hibanapló leírás, észrevételek..."></textarea>
               </div>
 
               <button type="submit" id="submitBtn" class="btn btn-custom-primary w-100 py-2.5">
-                <span id="btnText"><i class="bi bi-cloud-upload me-2"></i>Adatok Mentése</span>
+                <span id="btnText"><i class="bi bi-cloud-upload me-2"></i>MUT Beérkeztetése (Sárgítás)</span>
                 <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
               </button>
 
@@ -407,10 +355,11 @@
               <div class="col-md-3">
                 <select id="filterStatusz" class="form-select form-select-sm">
                   <option value="">Összes státusz</option>
-                  <option value="Elvégezve">Elvégezve</option>
-                  <option value="Folyamatban">Folyamatban</option>
+                  <option value="Beérkezett">Beérkezett (Sárga)</option>
+                  <option value="Folyamatban">Folyamatban / Kiosztva</option>
                   <option value="Javításra vár">Javításra vár</option>
                   <option value="További intézkedést igényel">További intézkedést igényel</option>
+                  <option value="Elvégezve">Elvégezve / Lezárva (Bázis)</option>
                 </select>
               </div>
               <div class="col-md-4">
@@ -516,7 +465,7 @@
           </div>
 
           <div class="mt-4">
-            <label class="fw-bold mb-2 text-dark small text-uppercase"><i class="bi bi-chat-left-text me-1 text-primary"></i>Megjegyzés & Történet</label>
+            <label class="fw-bold mb-2 text-dark small text-uppercase"><i class="bi bi-chat-left-text me-1 text-primary"></i>Megjegyzés & Naplózott Tapasztalatok</label>
             <div class="note-box" id="modalMegjegyzes">Nincs megjegyzés fűzve.</div>
           </div>
         </div>
@@ -527,12 +476,12 @@
     </div>
   </div>
 
-  <!-- Adatok Módosítása Modal -->
+  <!-- Szerkesztés Modal (Munkakiosztás / Státusz / Tapasztalatok Hozzáfűzése) -->
   <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
         <div class="modal-header bg-warning text-dark border-0" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
-          <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>MUT & Munkavégzők Módosítása</h5>
+          <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Munkakiosztás, Módosítás & Tapasztalatok</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
         </div>
         <div class="modal-body p-4">
@@ -562,7 +511,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-people me-1 text-primary"></i>Munkavégzők csatolása / eltávolítása</label>
+              <label class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-people me-1 text-primary"></i>Munkavégző(k) kiosztása / módosítása</label>
               <div class="tech-checkbox-list" id="updateMuszereszContainer">
                 <div class="tech-checkbox-item">
                   <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1">
@@ -610,15 +559,16 @@
             <div class="mb-3">
               <label for="newStatusz" class="form-label fw-semibold small text-muted text-uppercase">Státusz Kiválasztása</label>
               <select class="form-select" id="newStatusz" required>
-                <option value="Elvégezve">Elvégezve (Készidő bejegyzéssel)</option>
-                <option value="Folyamatban">Folyamatban</option>
+                <option value="Beérkezett">Beérkezett (Sárga)</option>
+                <option value="Folyamatban">Folyamatban / Kiosztva</option>
                 <option value="Javításra vár">Javításra vár</option>
                 <option value="További intézkedést igényel">További intézkedést igényel</option>
+                <option value="Elvégezve">Elvégezve / Lezárva (Bázis)</option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Határidő módosítása</label>
+              <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Lejárat / Határidő módosítása</label>
               <input type="date" class="form-control" id="updateHatarido">
             </div>
 
@@ -632,8 +582,9 @@
             </div>
 
             <div class="mb-4">
-              <label for="updateNote" class="form-label fw-semibold small text-muted text-uppercase">Kiegészítő Megjegyzés (Opcionális)</label>
-              <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. Munkavégző módosítva, mérés sikeres..."></textarea>
+              <label for="updateNote" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-chat-plus me-1 text-primary"></i>Új Tapasztalat / Megjegyzés hozzáfűzése</label>
+              <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. Mérés elvégezve, kondenzátor cserélve..."></textarea>
+              <div class="form-text text-muted small">Az ide beírt megjegyzés időbélyeggel és neveddel hozzáfűződik a korábbiakhoz.</div>
             </div>
 
             <button type="submit" class="btn btn-warning w-100 fw-bold py-2.5 shadow-sm">
@@ -733,29 +684,19 @@
 
       refreshBtn.addEventListener('click', loadData);
 
-      // ÚJ MUT rögzítés küldése
+      // ÚJ MUT RÖGZÍTÉS (Beérkezés - Sárgítás)
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        const selectedTechs = [];
-        document.querySelectorAll('.tech-check:checked').forEach(cb => {
-          selectedTechs.push(cb.value);
-        });
-
-        if (selectedTechs.length === 0) {
-          alert('Kérjük, jelöljön ki legalább egy munkavégzőt!');
-          return;
-        }
 
         const formData = {
           action: 'create',
           rogzito: document.getElementById('rogzito').value,
           alfanumerika: alfanumerikaInput.value,
           blokk: blokkSelect.value,
-          muszeresz: selectedTechs.join(', '),
+          muszeresz: '', // Kezdéskor még nincs kiosztva
           mut: mutInput.value,
-          statusz: document.getElementById('statusz').value,
-          hatarido: document.getElementById('hatarido').value, // Határidő átadása
+          statusz: 'Beérkezett',
+          hatarido: document.getElementById('hatarido').value,
           ciklusfigyeles: document.getElementById('ciklusfigyeles').checked ? 'Igen' : 'Nem',
           megjegyzes: document.getElementById('megjegyzes').value
         };
@@ -805,7 +746,7 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Táblázat renderelése - VISSZAÁLLÍTVA: Lejártak előresorolása + piros kiemelése
+      // Táblázat renderelése - Lejártak elöl -> Beérkezett -> Folyamatban -> Elvégezve legalul
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -814,19 +755,23 @@
 
         const today = new Date().toISOString().split('T')[0];
 
-        // Súlyozott rendezés: Lejártak legelöl -> Folyamatban lévők -> Elvégeztek legalul
         const sortedData = [...data].sort((a, b) => {
-          const isAOverdue = a.hatarido && a.statusz !== 'Elvégezve' && a.hatarido <= today;
-          const isBOverdue = b.hatarido && b.statusz !== 'Elvégezve' && b.hatarido <= today;
+          const isAClosed = a.statusz === 'Elvégezve';
+          const isBClosed = b.statusz === 'Elvégezve';
+          const isAOverdue = a.hatarido && !isAClosed && a.hatarido <= today;
+          const isBOverdue = b.hatarido && !isBClosed && b.hatarido <= today;
+          const isABeerkezett = a.statusz === 'Beérkezett';
+          const isBBeerkezett = b.statusz === 'Beérkezett';
 
-          const getPriority = (row, isOverdue) => {
-            if (isOverdue) return 1;
-            if (row.statusz !== 'Elvégezve') return 2;
-            return 3;
+          const getPriority = (row, isOverdue, isBeerkezett, isClosed) => {
+            if (isClosed) return 4;     // Elvégeztek legalul
+            if (isOverdue) return 1;    // Lejártak legelöl (Piros)
+            if (isBeerkezett) return 2; // Beérkezettek (Sárga)
+            return 3;                   // Folyamatban lévők
           };
 
-          const prioA = getPriority(a, isAOverdue);
-          const prioB = getPriority(b, isBOverdue);
+          const prioA = getPriority(a, isAOverdue, isABeerkezett, isAClosed);
+          const prioB = getPriority(b, isBOverdue, isBBeerkezett, isBClosed);
 
           if (prioA !== prioB) return prioA - prioB;
 
@@ -839,12 +784,17 @@
         let html = '';
         sortedData.forEach(row => {
           let badgeClass = 'badge-folyamatban';
-          if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
+          if (row.statusz === 'Beérkezett') badgeClass = 'badge-beerkezett';
+          else if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           else if (row.statusz === 'Javításra vár') badgeClass = 'badge-javitasra-var';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
           const isOverdue = row.hatarido && row.statusz !== 'Elvégezve' && row.hatarido <= today;
-          let rowClass = isOverdue ? 'row-overdue' : '';
+          const isBeerkezett = row.statusz === 'Beérkezett';
+
+          let rowClass = '';
+          if (isOverdue) rowClass = 'row-overdue';
+          else if (isBeerkezett) rowClass = 'row-beerkezett';
 
           html += `
             <tr class="${rowClass}">
@@ -853,21 +803,24 @@
                 <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.keszIdobelyeg || '-'}</div>
               </td>
               <td>
-                <div class="fw-bold text-primary font-monospace">${row.mut || '-'} ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}</div>
+                <div class="fw-bold text-primary font-monospace">
+                  ${row.mut || '-'} 
+                  ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}
+                </div>
                 <div class="font-monospace text-dark fs-6 fw-bold my-1">${row.alfanumerika || '-'} <span class="text-secondary fw-normal small">(Blokk: ${row.blokk || '-'})</span></div>
-                <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz || '-'}</div>
+                <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz ? row.muszeresz : '<span class="text-warning fw-semibold">Még nincs kiosztva</span>'}</div>
               </td>
               <td>
                 <div class="small text-secondary"><i class="bi bi-clock-history me-1"></i>${row.ciklusfigyeles || 'Nem'}</div>
                 ${row.hatarido ? `<div class="small ${isOverdue ? 'fw-bold text-danger' : 'text-muted'} mt-1"><i class="bi bi-calendar-event me-1"></i>Hat.idő: ${row.hatarido}</div>` : ''}
               </td>
               <td>
-                <span class="status-badge ${badgeClass}">${row.statusz || 'Folyamatban'}</span>
+                <span class="status-badge ${badgeClass}">${row.statusz || 'Beérkezett'}</span>
               </td>
               <td class="text-center">
                 <div class="btn-group btn-group-sm shadow-sm rounded">
                   <button class="btn btn-outline-secondary bg-white" onclick="viewDetails(${row.rowIndex})" title="Részletek"><i class="bi bi-eye"></i></button>
-                  <button class="btn btn-outline-warning bg-white text-dark" onclick="openUpdateModal(${row.rowIndex})" title="Módosítás"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-outline-warning bg-white text-dark" onclick="openUpdateModal(${row.rowIndex})" title="Módosítás / Kiosztás"><i class="bi bi-pencil-square"></i></button>
                   <button class="btn btn-outline-danger bg-white" onclick="deleteRecord(${row.rowIndex}, '${row.mut || ''}')" title="Törlés"><i class="bi bi-trash"></i></button>
                 </div>
               </td>
@@ -890,7 +843,7 @@
         document.getElementById('modalKeszIdo').textContent = row.keszIdobelyeg || 'Nincs készre jelentve';
         document.getElementById('modalCiklus').textContent = row.ciklusfigyeles || 'Nem';
         document.getElementById('modalRogzito').textContent = row.rogzito || '-';
-        document.getElementById('modalMuszeresz').textContent = row.muszeresz || '-';
+        document.getElementById('modalMuszeresz').textContent = row.muszeresz || 'Még nincs kiosztva';
         document.getElementById('modalMegjegyzes').textContent = row.megjegyzes || 'Nincs megjegyzés fűzve.';
 
         detailsModal.show();
@@ -903,7 +856,7 @@
 
         document.getElementById('updateRowIndex').value = row.rowIndex;
         document.getElementById('updateMutTitle').value = row.mut || '';
-        document.getElementById('newStatusz').value = row.statusz || 'Folyamatban';
+        document.getElementById('newStatusz').value = row.statusz || 'Beérkezett';
         document.getElementById('updateHatarido').value = row.hatarido || '';
         
         document.querySelectorAll('.update-tech-check').forEach(cb => {
@@ -916,9 +869,11 @@
         updateStatusModal.show();
       };
 
-      // MUT törlése funkció
+      // MUT törlése funkció (PIN kóddal védve!)
       window.deleteRecord = function(rowIndex, mutNum) {
-        if (!confirm(`Biztosan törölni szeretné a(z) ${mutNum} számú MUT tételt?`)) {
+        const confirmPin = prompt(`A(z) ${mutNum} számú MUT törléséhez adja meg a törlési kód / PIN-t:`);
+        if (confirmPin !== SITE_PIN) {
+          if (confirmPin !== null) alert('Hibás kód! A törlés megszakítva.');
           return;
         }
 
@@ -941,7 +896,7 @@
         });
       };
 
-      // Módosítás mentése
+      // Módosítás / Munkakiosztás / Tapasztalatok mentése
       const updateForm = document.getElementById('updateStatusForm');
       updateForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -953,11 +908,6 @@
         document.querySelectorAll('.update-tech-check:checked').forEach(cb => {
           selectedTechs.push(cb.value);
         });
-
-        if (selectedTechs.length === 0) {
-          alert('Kérjük, jelöljön ki legalább egy munkavégzőt!');
-          return;
-        }
 
         const updateData = {
           action: 'update',
@@ -972,7 +922,7 @@
 
         const submitBtn = updateForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Frissítés...';
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mentés...';
 
         fetch(APPS_SCRIPT_URL, {
           method: 'POST',
