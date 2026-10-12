@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx3r9lWZwN8ZX_YFOGJX2Jhhq5X8CqrYvT4sHc-yCjO7T42PnCxs5y0tyVKKcDnIw3M/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1OUOYPcaenMG9V3kkvZ5fk4A2MPCBu1NpgeLlaaCe7V3935T20c9Hq-gYTh-AVSQEQ/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -318,7 +318,7 @@
               </div>
 
               <div class="mb-3">
-                <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Lejárati határidő <span class="text-danger">*</span></label>
+                <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Késői befejezés <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="hatarido" required>
               </div>
 
@@ -326,11 +326,11 @@
                 <div class="form-check form-switch mb-2">
                   <input class="form-check-input" type="checkbox" id="ciklusfigyeles" style="cursor: pointer;">
                   <label class="form-check-label fw-bold small text-dark" for="ciklusfigyeles" style="cursor: pointer;">
-                    Késői befejezés
+                    MUT ütemezés / Köv. főj.
                   </label>
                 </div>
                 <div id="utemezesDatumBox" class="d-none mt-2">
-                  <label for="utemezettDatum" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-bell me-1 text-warning"></i>Emlékeztető / Ütemezés dátuma</label>
+                  <label for="utemezettDatum" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-bell me-1 text-warning"></i>Ütemezés / Emlékeztető dátuma</label>
                   <input type="date" class="form-control form-control-sm" id="utemezettDatum">
                 </div>
               </div>
@@ -463,13 +463,17 @@
             </div>
             <div class="col-md-6">
               <label class="text-muted small text-uppercase fw-semibold">Késői befejezés</label>
+              <div class="fw-semibold text-danger" id="modalHatarido">-</div>
+            </div>
+            <div class="col-md-6">
+              <label class="text-muted small text-uppercase fw-semibold">MUT ütemezés / Köv. főj.</label>
               <div class="fw-semibold text-secondary" id="modalCiklus">-</div>
             </div>
             <div class="col-md-6">
               <label class="text-muted small text-uppercase fw-semibold">Utolsó rögzítő / módosító</label>
               <div class="fw-semibold text-secondary" id="modalRogzito">-</div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <label class="text-muted small text-uppercase fw-semibold">Munkavégző(k)</label>
               <div class="fw-semibold text-dark" id="modalMuszeresz">-</div>
             </div>
@@ -578,7 +582,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Lejárati határidő módosítása</label>
+              <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késői befejezés módosítása</label>
               <input type="date" class="form-control" id="updateHatarido" required>
             </div>
 
@@ -586,11 +590,11 @@
               <div class="form-check form-switch mb-2">
                 <input class="form-check-input" type="checkbox" id="updateCiklusfigyeles" style="cursor: pointer;">
                 <label class="form-check-label fw-bold small text-dark" for="updateCiklusfigyeles" style="cursor: pointer;">
-                  Késői befejezés
+                  MUT ütemezés / Köv. főj.
                 </label>
               </div>
               <div id="updateUtemezesDatumBox" class="d-none mt-2">
-                <label for="updateUtemezettDatum" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-bell me-1 text-warning"></i>Emlékeztető / Ütemezés dátuma</label>
+                <label for="updateUtemezettDatum" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-bell me-1 text-warning"></i>Ütemezés / Emlékeztető dátuma</label>
                 <input type="date" class="form-control form-control-sm" id="updateUtemezettDatum">
               </div>
             </div>
@@ -720,7 +724,7 @@
 
       refreshBtn.addEventListener('click', loadData);
 
-      // ÚJ MUT RÖGZÍTÉS (Választható státusszal)
+      // ÚJ MUT RÖGZÍTÉS
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -757,7 +761,9 @@
           btnSpinner.classList.add('d-none');
           form.reset();
           document.getElementById('newStatuszCreate').value = 'Beérkezett';
+          ciklusSwitch.checked = false;
           utemezesDatumBox.classList.add('d-none');
+          mutDuplicateError.classList.add('d-none');
           loadData();
         })
         .catch(err => {
@@ -769,16 +775,28 @@
         });
       });
 
-      // Szűrés logika
+      // Szűrés & Keresés logika (Perjeles és perjel nélküli MUT támogatással)
       function filterData() {
-        const query = searchInput.value.toLowerCase();
+        const rawQuery = searchInput.value.trim().toLowerCase();
+        const cleanQuery = rawQuery.replace(/[\/\s-]/g, '');
         const statusVal = filterStatusz.value;
         const blokkVal = filterBlokk.value;
 
         const filtered = allData.filter(row => {
-          const matchQuery = Object.values(row).some(val => String(val).toLowerCase().includes(query));
+          const rawMut = String(row.mut || '').toLowerCase();
+          const cleanMut = rawMut.replace(/[\/\s-]/g, '');
+
+          const matchQuery = !rawQuery || 
+            rawMut.includes(rawQuery) || 
+            cleanMut.includes(cleanQuery) ||
+            String(row.alfanumerika || '').toLowerCase().includes(rawQuery) ||
+            String(row.muszeresz || '').toLowerCase().includes(rawQuery) ||
+            String(row.rogzito || '').toLowerCase().includes(rawQuery) ||
+            String(row.megjegyzes || '').toLowerCase().includes(rawQuery);
+
           const matchStatus = !statusVal || row.statusz === statusVal;
           const matchBlokk = !blokkVal || String(row.blokk) === blokkVal;
+
           return matchQuery && matchStatus && matchBlokk;
         });
 
@@ -838,11 +856,6 @@
           if (isOverdue) rowClass = 'row-overdue';
           else if (isBeerkezett) rowClass = 'row-beerkezett';
 
-          const hasUtemezes = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
-          const utemezesText = hasUtemezes 
-            ? `<span class="badge bg-warning text-dark"><i class="bi bi-bell-fill me-1"></i>Igen ${row.utemezettDatum ? '(' + row.utemezettDatum + ')' : ''}</span>`
-            : `<span class="text-muted">Nem</span>`;
-
           html += `
             <tr class="${rowClass}">
               <td>
@@ -858,8 +871,7 @@
                 <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz ? row.muszeresz : '<span class="text-warning fw-semibold">Még nincs kiosztva</span>'}</div>
               </td>
               <td>
-                <div class="small">${utemezesText}</div>
-                ${row.hatarido ? `<div class="small ${isOverdue ? 'fw-bold text-danger' : 'text-muted'} mt-1"><i class="bi bi-calendar-event me-1"></i>Hat.idő: ${row.hatarido}</div>` : ''}
+                ${row.hatarido ? `<div class="small ${isOverdue ? 'fw-bold text-danger' : 'text-dark'}"><i class="bi bi-calendar-event me-1 text-primary"></i>${row.hatarido}</div>` : '<span class="text-muted">-</span>'}
               </td>
               <td>
                 <span class="status-badge ${badgeClass}">${row.statusz || 'Beérkezett'}</span>
@@ -889,12 +901,14 @@
         document.getElementById('modalIdobelyeg').textContent = row.idobelyeg || '-';
         document.getElementById('modalKeszIdo').textContent = row.keszIdobelyeg || 'Nincs készre jelentve';
         
+        document.getElementById('modalHatarido').textContent = row.hatarido || '-';
+
         const isUtemezett = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
         const ciklusInfo = isUtemezett 
-          ? `Igen ${row.utemezettDatum ? '(Emlékeztető dátuma: ' + row.utemezettDatum + ')' : ''}` 
+          ? `Igen ${row.utemezettDatum ? '(Ütemezés: ' + row.utemezettDatum + ')' : ''}` 
           : 'Nem';
         document.getElementById('modalCiklus').textContent = ciklusInfo;
-        
+
         document.getElementById('modalRogzito').textContent = row.rogzito || '-';
         document.getElementById('modalMuszeresz').textContent = row.muszeresz || 'Még nincs kiosztva';
         document.getElementById('modalMegjegyzes').textContent = row.megjegyzes || 'Nincs megjegyzés fűzve.';
@@ -918,7 +932,7 @@
         return dateStr;
       }
 
-      // Módosító modal megnyitása (határidő automatikus átemelésével)
+      // Módosító modal megnyitása
       window.openUpdateModal = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -926,8 +940,6 @@
         document.getElementById('updateRowIndex').value = row.rowIndex;
         document.getElementById('updateMutTitle').value = row.mut || '';
         document.getElementById('newStatusz').value = row.statusz || 'Beérkezett';
-        
-        // Itt töltődik be pontosan a meglévő lejárati határidő a dátumválasztóba
         document.getElementById('updateHatarido').value = formatDateForInput(row.hatarido);
         
         document.querySelectorAll('.update-tech-check').forEach(cb => {
