@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzolZpuHi5PAMxpNePF-0ThQ1jDRvKTtsQx06O0zYkI0t-av12C753PKdj3Q_UBxuZm/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj9yZGCO_oi3iWzXkyjCBr8bfqt0RFHWYtyXtxwNkagHn44Bq3eaUVmdreJX5qT4kalw/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -138,12 +138,9 @@
 
     .badge-beerkezett { background-color: #fef08a; color: #713f12; border: 1px solid #fde047; }
     .badge-folyamatban { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-    
-    /* Elvégezve piros kiemelés */
     .badge-elvegezve { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 700; }
     .badge-intezkedes { background-color: #f3e8ff; color: #581c87; border: 1px solid #e9d5ff; }
 
-    /* Sorkiemelések */
     .row-overdue {
       background-color: #fff5f5 !important;
       border-left: 4px solid #ef4444 !important;
@@ -262,7 +259,7 @@
         <div class="card">
           <div class="card-header d-flex align-items-center">
             <i class="bi bi-plus-circle-fill text-primary fs-5 me-2"></i>
-            <span>Új MUT beérkezés / rögzítés</span>
+            <span>Új MUT felvétel / rögzítés</span>
           </div>
           <div class="card-body p-4">
             
@@ -311,6 +308,16 @@
               </div>
 
               <div class="mb-3">
+                <label for="newStatuszCreate" class="form-label fw-semibold small text-muted text-uppercase">Státusz <span class="text-danger">*</span></label>
+                <select class="form-select" id="newStatuszCreate" required>
+                  <option value="Beérkezett" selected>Beérkezett (Alapértelmezett)</option>
+                  <option value="Folyamatban">Folyamatban / Kiosztva</option>
+                  <option value="További intézkedést igényel">További intézkedést igényel</option>
+                  <option value="Elvégezve">Elvégezve (Piros)</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
                 <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Lejárati határidő <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="hatarido" required>
               </div>
@@ -334,7 +341,7 @@
               </div>
 
               <button type="submit" id="submitBtn" class="btn btn-custom-primary w-100 py-2.5">
-                <span id="btnText"><i class="bi bi-cloud-upload me-2"></i>MUT Beérkeztetése (Sárgítás)</span>
+                <span id="btnText"><i class="bi bi-cloud-upload me-2"></i>MUT Rögzítése</span>
                 <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
               </button>
 
@@ -394,7 +401,7 @@
                   <tr>
                     <th>Időbélyeg (Kezdés/Kész)</th>
                     <th>MUT / Alfanumerika / Munkavégzők</th>
-                    <th>Késői befejezés / Ütemezés</th>
+                    <th>Késői befejezés</th>
                     <th>Státusz</th>
                     <th class="text-center">Műveletek</th>
                   </tr>
@@ -713,12 +720,13 @@
 
       refreshBtn.addEventListener('click', loadData);
 
-      // ÚJ MUT RÖGZÍTÉS (Beérkezés)
+      // ÚJ MUT RÖGZÍTÉS (Választható státusszal)
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const isUtemezett = ciklusSwitch.checked;
         const utemezettDatumVal = isUtemezett ? document.getElementById('utemezettDatum').value : '';
+        const selectedStatusz = document.getElementById('newStatuszCreate').value;
 
         const formData = {
           action: 'create',
@@ -727,7 +735,7 @@
           blokk: blokkSelect.value,
           muszeresz: '',
           mut: mutInput.value,
-          statusz: 'Beérkezett',
+          statusz: selectedStatusz,
           hatarido: document.getElementById('hatarido').value,
           ciklusfigyeles: isUtemezett ? 'Igen' : 'Nem',
           utemezettDatum: utemezettDatumVal,
@@ -748,6 +756,7 @@
           btnText.classList.remove('d-none');
           btnSpinner.classList.add('d-none');
           form.reset();
+          document.getElementById('newStatuszCreate').value = 'Beérkezett';
           utemezesDatumBox.classList.add('d-none');
           loadData();
         })
@@ -780,8 +789,7 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Táblázat renderelése - Lejártak elöl -> Beérkezett -> Folyamatban -> Elvégezve legalul
-   // Táblázat renderelése
+      // Táblázat renderelése
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -830,7 +838,6 @@
           if (isOverdue) rowClass = 'row-overdue';
           else if (isBeerkezett) rowClass = 'row-beerkezett';
 
-          // Ütemezés kijelzés szigorú javítása: Csak ha a ciklusfigyeles mező pontosan 'Igen'
           const hasUtemezes = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
           const utemezesText = hasUtemezes 
             ? `<span class="badge bg-warning text-dark"><i class="bi bi-bell-fill me-1"></i>Igen ${row.utemezettDatum ? '(' + row.utemezettDatum + ')' : ''}</span>`
@@ -870,7 +877,7 @@
         tableBody.innerHTML = html;
       }
 
-      // Részletek megtekintése modal
+      // Részletek megtekintése
       window.viewDetails = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -895,7 +902,7 @@
         detailsModal.show();
       };
 
-      // Módosító modal megnyitása
+      // Módosító modal megnyitása (határidő stabil átvételével)
       window.openUpdateModal = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -909,7 +916,7 @@
           cb.checked = row.muszeresz && row.muszeresz.includes(cb.value.split(' (')[0]);
         });
 
-        const isUtemezett = row.ciklusfigyeles === 'Igen';
+        const isUtemezett = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
         updateCiklusSwitch.checked = isUtemezett;
         if (isUtemezett) {
           updateUtemezesDatumBox.classList.remove('d-none');
