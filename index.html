@@ -781,6 +781,7 @@
       filterBlokk.addEventListener('change', filterData);
 
       // Táblázat renderelése - Lejártak elöl -> Beérkezett -> Folyamatban -> Elvégezve legalul
+   // Táblázat renderelése
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -829,8 +830,8 @@
           if (isOverdue) rowClass = 'row-overdue';
           else if (isBeerkezett) rowClass = 'row-beerkezett';
 
-          // Ütemezés kijelzés javítása: Csak ha Igen és van dátum
-          const hasUtemezes = row.ciklusfigyeles === 'Igen';
+          // Ütemezés kijelzés szigorú javítása: Csak ha a ciklusfigyeles mező pontosan 'Igen'
+          const hasUtemezes = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
           const utemezesText = hasUtemezes 
             ? `<span class="badge bg-warning text-dark"><i class="bi bi-bell-fill me-1"></i>Igen ${row.utemezettDatum ? '(' + row.utemezettDatum + ')' : ''}</span>`
             : `<span class="text-muted">Nem</span>`;
@@ -869,7 +870,7 @@
         tableBody.innerHTML = html;
       }
 
-      // Részletek megtekintése
+      // Részletek megtekintése modal
       window.viewDetails = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -881,8 +882,9 @@
         document.getElementById('modalIdobelyeg').textContent = row.idobelyeg || '-';
         document.getElementById('modalKeszIdo').textContent = row.keszIdobelyeg || 'Nincs készre jelentve';
         
-        const ciklusInfo = row.ciklusfigyeles === 'Igen' 
-          ? `Igen (Emlékeztető: ${row.utemezettDatum || 'Nincs dátum megadva'})` 
+        const isUtemezett = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
+        const ciklusInfo = isUtemezett 
+          ? `Igen ${row.utemezettDatum ? '(Emlékeztető dátuma: ' + row.utemezettDatum + ')' : ''}` 
           : 'Nem';
         document.getElementById('modalCiklus').textContent = ciklusInfo;
         
