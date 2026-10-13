@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxyWIdey7XjYCx-6ioMlcVNean33BW4rkuDUPCaOWPa-AUQApSge232MJykyq5oy9MfqA/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1OUOYPcaenMG9V3kkvZ5fk4A2MPCBu1NpgeLlaaCe7V3935T20c9Hq-gYTh-AVSQEQ/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -141,13 +141,10 @@
     .badge-elvegezve { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 700; }
     .badge-intezkedes { background-color: #f3e8ff; color: #581c87; border: 1px solid #e9d5ff; }
 
-    .row-overdue {
-      background-color: #fff5f5 !important;
-      border-left: 4px solid #ef4444 !important;
-    }
+    /* Fix sor-kiemelés kizárólag státusz alapján */
     .row-beerkezett {
       background-color: #fefce8 !important;
-      border-left: 4px solid #eab308 !important;
+      border-left: 5px solid #eab308 !important;
     }
 
     .filter-card {
@@ -807,37 +804,64 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Táblázat renderelése
+      // Dátum tisztítása YYYY-MM-DD formátumra az összehasonlításhoz
+      function normalizeDate(dateStr) {
+        if (!dateStr) return '';
+        let cleaned = String(dateStr).trim().replace(/\./g, '-').replace(/\s+/g, '');
+        if (cleaned.endsWith('-')) cleaned = cleaned.slice(0, -1);
+        const parts = cleaned.split('-');
+        if (parts.length === 3) {
+          return `${parts[0].padStart(4, '0')}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+        }
+        return cleaned;
+      }
+
+      // Táblázat renderelése (Konstans Státusz Színekkel)
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
           return;
         }
 
-        const today = new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+
+        // Holnapi nap kiszámítása (1 nap múlva lejáró figyelmeztetéshez)
+        const tomorrowObj = new Date(now);
+        tomorrowObj.setDate(tomorrowObj.getDate() + 1);
+        const tomorrowStr = tomorrowObj.toISOString().split('T')[0];
 
         const sortedData = [...data].sort((a, b) => {
           const isAClosed = a.statusz === 'Elvégezve';
           const isBClosed = b.statusz === 'Elvégezve';
-          const isAOverdue = a.hatarido && !isAClosed && a.hatarido <= today;
-          const isBOverdue = b.hatarido && !isBClosed && b.hatarido <= today;
+          
+          const dateA = normalizeDate(a.hatarido);
+          const dateB = normalizeDate(b.hatarido);
+
+          const isAOverdue = dateA && !isAClosed && dateA <= todayStr;
+          const isBOverdue = dateB && !isBClosed && dateB <= todayStr;
+
+          const isASoon = dateA && !isAClosed && dateA === tomorrowStr;
+          const isBSoon = dateB && !isBClosed && dateB === tomorrowStr;
+
           const isABeerkezett = a.statusz === 'Beérkezett';
           const isBBeerkezett = b.statusz === 'Beérkezett';
 
-          const getPriority = (row, isOverdue, isBeerkezett, isClosed) => {
-            if (isClosed) return 4;     // Elvégeztek legalul
-            if (isOverdue) return 1;    // Lejártak legelöl (Piros)
-            if (isBeerkezett) return 2; // Beérkezettek (Sárga)
-            return 3;                   // Folyamatban lévők
+          const getPriority = (row, isOverdue, isSoon, isBeerkezett, isClosed) => {
+            if (isClosed) return 5;     // Elvégeztek legalul
+            if (isOverdue) return 1;    // Lejártak legelöl
+            if (isSoon) return 2;       // 1 nap múlva lejárók
+            if (isBeerkezett) return 3; // Beérkezettek
+            return 4;                   // Folyamatban lévők
           };
 
-          const prioA = getPriority(a, isAOverdue, isABeerkezett, isAClosed);
-          const prioB = getPriority(b, isBOverdue, isBBeerkezett, isBClosed);
+          const prioA = getPriority(a, isAOverdue, isASoon, isABeerkezett, isAClosed);
+          const prioB = getPriority(b, isBOverdue, isBSoon, isBBeerkezett, isBClosed);
 
           if (prioA !== prioB) return prioA - prioB;
 
-          if (a.hatarido && b.hatarido) {
-            return a.hatarido.localeCompare(b.hatarido);
+          if (dateA && dateB) {
+            return dateA.localeCompare(dateB);
           }
           return 0;
         });
@@ -849,12 +873,16 @@
           else if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
 
-          const isOverdue = row.hatarido && row.statusz !== 'Elvégezve' && row.hatarido <= today;
-          const isBeerkezett = row.statusz === 'Beérkezett';
+          const normDate = normalizeDate(row.hatarido);
+          const isClosed = row.statusz === 'Elvégezve';
+          const isOverdue = normDate && !isClosed && normDate <= todayStr;
+          const isSoon = normDate && !isClosed && normDate === tomorrowStr;
 
+          // A sor háttérszíne kizárólag a státusztól függ!
           let rowClass = '';
-          if (isOverdue) rowClass = 'row-overdue';
-          else if (isBeerkezett) rowClass = 'row-beerkezett';
+          if (row.statusz === 'Beérkezett') {
+            rowClass = 'row-beerkezett';
+          }
 
           html += `
             <tr class="${rowClass}">
@@ -865,13 +893,17 @@
               <td>
                 <div class="fw-bold text-primary font-monospace">
                   ${row.mut || '-'} 
-                  ${isOverdue ? '<span class="badge bg-danger ms-1">LEJÁRT!</span>' : ''}
+                  ${isOverdue ? '<span class="badge bg-danger ms-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>LEJÁRT!</span>' : ''}
+                  ${isSoon ? '<span class="badge bg-warning text-dark ms-1"><i class="bi bi-clock-history me-1"></i>1 NAP MÚLVA LEJÁR!</span>' : ''}
                 </div>
                 <div class="font-monospace text-dark fs-6 fw-bold my-1">${row.alfanumerika || '-'} <span class="text-secondary fw-normal small">(Blokk: ${row.blokk || '-'})</span></div>
                 <div class="tech-names-text"><i class="bi bi-person me-1"></i>${row.muszeresz ? row.muszeresz : '<span class="text-warning fw-semibold">Még nincs kiosztva</span>'}</div>
               </td>
               <td>
-                ${row.hatarido ? `<div class="small ${isOverdue ? 'fw-bold text-danger' : 'text-dark'}"><i class="bi bi-calendar-event me-1 text-primary"></i>${row.hatarido}</div>` : '<span class="text-muted">-</span>'}
+                ${row.hatarido ? `
+                  <div class="small ${isOverdue ? 'fw-bold text-danger' : (isSoon ? 'fw-bold text-warning' : 'text-dark')}">
+                    <i class="bi bi-calendar-event me-1 ${isOverdue ? 'text-danger' : 'text-primary'}"></i>${row.hatarido}
+                  </div>` : '<span class="text-muted">-</span>'}
               </td>
               <td>
                 <span class="status-badge ${badgeClass}">${row.statusz || 'Beérkezett'}</span>
