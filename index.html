@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJXVmsmEzyS6wWFvIFEolvfkmpXPnuPmLl6QgcmJHKwA6JUlqEjhLxSD-qcpvf0d72vQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzl11uGKB_kfnXX5KHd72vwySWaStBrlzaYffdV3Q4vEyFgPV3jSBs3YRL-Tjt1eK65Mw/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -140,8 +140,9 @@
     .badge-folyamatban { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
     .badge-elvegezve { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 700; }
     .badge-intezkedes { background-color: #f3e8ff; color: #581c87; border: 1px solid #e9d5ff; }
+    .badge-felfüggesztve { background-color: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; font-weight: 700; }
 
-    /* Fix sor-kiemelés kizárólag státusz alapján */
+    /* Fix sor-kiemelés kizárólag Beérkezett státusz alapján */
     .row-beerkezett {
       background-color: #fefce8 !important;
       border-left: 5px solid #eab308 !important;
@@ -200,6 +201,17 @@
       font-size: 0.8rem;
       color: #6b7280;
       margin-top: 3px;
+    }
+
+    /* Megjegyzés ikon stílusa a táblázatban */
+    .note-indicator-icon {
+      color: #2563eb;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .note-indicator-icon:hover {
+      transform: scale(1.25);
     }
 
     footer {
@@ -310,6 +322,7 @@
                   <option value="Beérkezett" selected>Beérkezett (Alapértelmezett)</option>
                   <option value="Folyamatban">Folyamatban / Kiosztva</option>
                   <option value="További intézkedést igényel">További intézkedést igényel</option>
+                  <option value="Felfüggesztve (Bázis)">Felfüggesztve (Bázis)</option>
                   <option value="Elvégezve">Elvégezve (Piros)</option>
                 </select>
               </div>
@@ -367,6 +380,7 @@
                   <option value="Beérkezett">Beérkezett (Sárga)</option>
                   <option value="Folyamatban">Folyamatban / Kiosztva</option>
                   <option value="További intézkedést igényel">További intézkedést igényel</option>
+                  <option value="Felfüggesztve (Bázis)">Felfüggesztve (Bázis)</option>
                   <option value="Elvégezve">Elvégezve (Piros)</option>
                 </select>
               </div>
@@ -523,7 +537,21 @@
             </div>
 
             <div class="mb-3">
+              <label for="newStatusz" class="form-label fw-semibold small text-muted text-uppercase">Státusz Kiválasztása</label>
+              <select class="form-select" id="newStatusz" required>
+                <option value="Beérkezett">Beérkezett (Sárga)</option>
+                <option value="Folyamatban">Folyamatban / Kiosztva</option>
+                <option value="További intézkedést igényel">További intézkedést igényel</option>
+                <option value="Felfüggesztve (Bázis)">Felfüggesztve (Bázis)</option>
+                <option value="Elvégezve">Elvégezve (Piros)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
               <label class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-people me-1 text-primary"></i>Munkavégző(k) kiosztása / módosítása</label>
+              <div id="basisWarning" class="alert alert-secondary py-2 px-3 small d-none mb-2">
+                <i class="bi bi-pause-circle-fill me-1 text-secondary"></i><strong>Bázison van:</strong> Munkavégzés nem lehetséges, a műszerészek kiadása zárolva.
+              </div>
               <div class="tech-checkbox-list" id="updateMuszereszContainer">
                 <div class="tech-checkbox-item">
                   <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1">
@@ -566,16 +594,6 @@
                   <label class="form-check-label" for="uTech10">Kovács Szabolcs (10226025)</label>
                 </div>
               </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="newStatusz" class="form-label fw-semibold small text-muted text-uppercase">Státusz Kiválasztása</label>
-              <select class="form-select" id="newStatusz" required>
-                <option value="Beérkezett">Beérkezett (Sárga)</option>
-                <option value="Folyamatban">Folyamatban / Kiosztva</option>
-                <option value="További intézkedést igényel">További intézkedést igényel</option>
-                <option value="Elvégezve">Elvégezve (Piros)</option>
-              </select>
             </div>
 
             <div class="mb-3">
@@ -640,6 +658,8 @@
       const utemezesDatumBox = document.getElementById('utemezesDatumBox');
       const updateCiklusSwitch = document.getElementById('updateCiklusfigyeles');
       const updateUtemezesDatumBox = document.getElementById('updateUtemezesDatumBox');
+      const newStatuszSelect = document.getElementById('newStatusz');
+      const basisWarning = document.getElementById('basisWarning');
 
       // Ütemezési dátum doboz megjelenítése/elrejtése
       ciklusSwitch.addEventListener('change', function() {
@@ -657,6 +677,27 @@
           updateUtemezesDatumBox.classList.add('d-none');
         }
       });
+
+      // Bázis státusz váltásakor műszerész jelölőnégyzetek letiltása / feloldása
+      function handleBasisStatusChange() {
+        const isBasis = newStatuszSelect.value === 'Felfüggesztve (Bázis)';
+        const techChecks = document.querySelectorAll('.update-tech-check');
+        
+        if (isBasis) {
+          basisWarning.classList.remove('d-none');
+          techChecks.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = true;
+          });
+        } else {
+          basisWarning.classList.add('d-none');
+          techChecks.forEach(cb => {
+            cb.disabled = false;
+          });
+        }
+      }
+
+      newStatuszSelect.addEventListener('change', handleBasisStatusChange);
 
       // MUT szám automatikus maszkolása (/ jel az utolsó 2 karakter előtt)
       mutInput.addEventListener('input', function(e) {
@@ -772,7 +813,7 @@
         });
       });
 
-      // Szűrés & Keresés logika (Perjeles és perjel nélküli MUT támogatással)
+      // Szűrés & Keresés logika
       function filterData() {
         const rawQuery = searchInput.value.trim().toLowerCase();
         const cleanQuery = rawQuery.replace(/[\/\s-]/g, '');
@@ -804,7 +845,7 @@
       filterStatusz.addEventListener('change', filterData);
       filterBlokk.addEventListener('change', filterData);
 
-      // Dátum tisztítása YYYY-MM-DD formátumra az összehasonlításhoz
+      // Dátum tisztítása YYYY-MM-DD formátumra
       function normalizeDate(dateStr) {
         if (!dateStr) return '';
         let cleaned = String(dateStr).trim().replace(/\./g, '-').replace(/\s+/g, '');
@@ -816,7 +857,7 @@
         return cleaned;
       }
 
-      // Táblázat renderelése (Pontos határidő logikával: csak holnaptól lejárt)
+      // Táblázat renderelése
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -837,7 +878,6 @@
           const dateA = normalizeDate(a.hatarido);
           const dateB = normalizeDate(b.hatarido);
 
-          // Csak akkor lejárt, ha a határidő kisebb, mint a mai nap (tehát a napja már elmúlt)
           const isAOverdue = dateA && !isAClosed && dateA < todayStr;
           const isBOverdue = dateB && !isBClosed && dateB < todayStr;
 
@@ -856,7 +896,7 @@
             if (isToday) return 2;      // Ma lejáróak
             if (isSoon) return 3;       // Holnap lejáróak
             if (isBeerkezett) return 4; // Beérkezettek
-            return 5;                   // Folyamatban lévők
+            return 5;                   // Folyamatban / Bázis
           };
 
           const prioA = getPriority(a, isAOverdue, isAToday, isASoon, isABeerkezett, isAClosed);
@@ -876,6 +916,7 @@
           if (row.statusz === 'Beérkezett') badgeClass = 'badge-beerkezett';
           else if (row.statusz === 'Elvégezve') badgeClass = 'badge-elvegezve';
           else if (row.statusz === 'További intézkedést igényel') badgeClass = 'badge-intezkedes';
+          else if (row.statusz === 'Felfüggesztve (Bázis)') badgeClass = 'badge-felfüggesztve';
 
           const normDate = normalizeDate(row.hatarido);
           const isClosed = row.statusz === 'Elvégezve';
@@ -889,6 +930,9 @@
             rowClass = 'row-beerkezett';
           }
 
+          const hasNote = row.megjegyzes && String(row.megjegyzes).trim().length > 0;
+          const cleanNoteEscaped = hasNote ? String(row.megjegyzes).replace(/"/g, '&quot;').replace(/'/g, '&#39;') : '';
+
           html += `
             <tr class="${rowClass}">
               <td>
@@ -896,8 +940,9 @@
                 <div class="text-muted small" style="font-size:0.75rem;">Kész: ${row.keszIdobelyeg || '-'}</div>
               </td>
               <td>
-                <div class="fw-bold text-primary font-monospace">
-                  ${row.mut || '-'} 
+                <div class="fw-bold text-primary font-monospace d-flex align-items-center flex-wrap gap-1">
+                  <span>${row.mut || '-'}</span> 
+                  ${hasNote ? `<i class="bi bi-chat-text-fill note-indicator-icon ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="${cleanNoteEscaped}"></i>` : ''}
                   ${isOverdue ? '<span class="badge bg-danger ms-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>LEJÁRT!</span>' : ''}
                   ${isToday ? '<span class="badge bg-danger text-white ms-1"><i class="bi bi-clock-fill me-1"></i>MA LEJÁR!</span>' : ''}
                   ${isSoon ? '<span class="badge bg-warning text-dark ms-1"><i class="bi bi-clock-history me-1"></i>HOLNAP LEJÁR!</span>' : ''}
@@ -925,6 +970,11 @@
           `;
         });
         tableBody.innerHTML = html;
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
       }
 
       // Részletek megtekintése
@@ -954,7 +1004,7 @@
         detailsModal.show();
       };
 
-      // Dátum formázása YYYY-MM-DD formátumra az HTML input[type="date"] mezőhöz
+      // Dátum formázása HTML input[type="date"] mezőhöz
       function formatDateForInput(dateStr) {
         if (!dateStr) return '';
         let cleaned = String(dateStr).trim().replace(/\./g, '-').replace(/\s+/g, '');
@@ -977,12 +1027,16 @@
 
         document.getElementById('updateRowIndex').value = row.rowIndex;
         document.getElementById('updateMutTitle').value = row.mut || '';
-        document.getElementById('newStatusz').value = row.statusz || 'Beérkezett';
+        
+        const currentStatus = row.statusz || 'Beérkezett';
+        newStatuszSelect.value = currentStatus;
         document.getElementById('updateHatarido').value = formatDateForInput(row.hatarido);
         
         document.querySelectorAll('.update-tech-check').forEach(cb => {
           cb.checked = row.muszeresz && row.muszeresz.includes(cb.value.split(' (')[0]);
         });
+
+        handleBasisStatusChange();
 
         const isUtemezett = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
         updateCiklusSwitch.checked = isUtemezett;
@@ -999,7 +1053,7 @@
         updateStatusModal.show();
       };
 
-      // MUT törlése (PIN kóddal)
+      // MUT törlése PIN kóddal
       window.deleteRecord = function(rowIndex, mutNum) {
         const confirmPin = prompt(`A(z) ${mutNum} számú MUT törléséhez adja meg a törlési kód / PIN-t:`);
         if (confirmPin !== SITE_PIN) {
@@ -1032,12 +1086,14 @@
         e.preventDefault();
 
         const rowIndex = document.getElementById('updateRowIndex').value;
-        const selectedStatusz = document.getElementById('newStatusz').value;
+        const selectedStatusz = newStatuszSelect.value;
         
         const selectedTechs = [];
-        document.querySelectorAll('.update-tech-check:checked').forEach(cb => {
-          selectedTechs.push(cb.value);
-        });
+        if (selectedStatusz !== 'Felfüggesztve (Bázis)') {
+          document.querySelectorAll('.update-tech-check:checked').forEach(cb => {
+            selectedTechs.push(cb.value);
+          });
+        }
 
         const isUtemezett = updateCiklusSwitch.checked;
         const utemezettDatumVal = isUtemezett ? document.getElementById('updateUtemezettDatum').value : '';
