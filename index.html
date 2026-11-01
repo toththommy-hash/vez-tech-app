@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0Sf1zOMobFop3Y27d2Y6-0hXFjbAp2dNFpt157xE5y3qgQZJZXPHqIoLj8v08zY0Mdg/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfrG4_l8gyo1gkTCZ9txuHQGcan5Rrv3xuxKQFDqidKeFE8QEp84Z0UY_Ad3mIysEBag/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -248,82 +248,6 @@
       color: #64748b;
       font-size: 0.85rem;
     }
-
-    /* --- BIZTONSÁGOS 1 OLDALAS NYOMTATÁSI NÉZET (TMI404_NY07_V01) --- */
-    #printArea {
-      display: none;
-    }
-
-    @media print {
-      header, main, footer, #pinOverlay, .modal, .modal-backdrop {
-        display: none !important;
-      }
-      
-      #printArea {
-        display: block !important;
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-
-      @page {
-        size: A4 landscape;
-        margin: 5mm;
-      }
-    }
-
-    .print-table-container {
-      width: 100%;
-      max-width: 275mm;
-      margin: 0 auto;
-      border: 2px solid #000;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #fff;
-      color: #000;
-      box-sizing: border-box;
-      page-break-inside: avoid;
-    }
-
-    .print-header-table {
-      width: 100%;
-      border-collapse: collapse;
-      border-bottom: 2px solid #000;
-    }
-
-    .print-header-table td {
-      border-right: 1px solid #000;
-      padding: 4px 8px;
-      vertical-align: middle;
-    }
-
-    .print-header-table td:last-child {
-      border-right: none;
-    }
-
-    .print-main-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .print-main-table td, .print-main-table th {
-      border: 1px solid #000;
-      padding: 4px 8px;
-      vertical-align: top;
-    }
-
-    .print-label {
-      font-weight: bold;
-      font-size: 10px;
-      margin-bottom: 1px;
-    }
-
-    .print-value {
-      font-size: 12px;
-      min-height: 16px;
-    }
   </style>
 </head>
 <body>
@@ -364,7 +288,7 @@
   <!-- Fő Tartalom -->
   <main class="container-fluid-custom mb-5">
     
-    <!-- Gyorsstatisztika Kártyák (Kattintással szűrhetőek) -->
+    <!-- Gyorsstatisztika Kártyák -->
     <div class="row g-3 mb-3">
       <div class="col-md-3 col-6">
         <div class="kpi-card d-flex align-items-center justify-content-between" onclick="quickFilterKpi('all')" id="kpiCardAll">
@@ -413,8 +337,6 @@
       <div class="collapse" id="statsCollapse">
         <div class="card-body p-3 bg-light">
           <div class="row g-3">
-            
-            <!-- Blokk szerinti statisztika -->
             <div class="col-md-6">
               <h6 class="fw-bold small text-dark mb-2"><i class="bi bi-building me-1"></i>MUT száma Blokkok szerint</h6>
               <div class="d-flex flex-wrap gap-2" id="blockStatsContainer">
@@ -425,15 +347,12 @@
                 <span class="badge bg-white text-dark border p-2">Közös: <b>0</b></span>
               </div>
             </div>
-
-            <!-- Műszerész leterheltség statisztika -->
             <div class="col-md-6">
               <h6 class="fw-bold small text-dark mb-2"><i class="bi bi-person-gear me-1"></i>Műszerészek Aktív Kiosztott Feladatai</h6>
               <div class="d-flex flex-wrap gap-1" id="techStatsContainer">
                 <span class="text-muted small">Betöltés...</span>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -831,7 +750,7 @@
         </div>
       </div>
     </div>
-  </main>
+  </div>
 
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -963,10 +882,13 @@
 
       let allData = [];
 
-      // PIN ellenőrzés
+      // PIN ellenőrzés (biztosítva string konverzióval és trim-mel)
       pinForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        if (pinInput.value === SITE_PIN) {
+        const enteredPin = String(pinInput.value).trim();
+        const expectedPin = String(SITE_PIN).trim();
+
+        if (enteredPin === expectedPin) {
           pinOverlay.style.display = 'none';
           loadData();
         } else {
@@ -1399,18 +1321,27 @@
         updateStatusModal.show();
       };
 
-      // --- BIZTONSÁGOS KÖZVETLEN NYOMTATÁSI ABLAK GENERÁLÁS ---
+      // --- BIZTONSÁGOS IFRAME-ALAPÚ NYOMTATÁSI MOTOR (GARANTÁLTAN KITÖLTÖTT ÉS 1 OLDALAS) ---
       function executePrint(printData) {
-        const printWindow = window.open('', '_blank', 'width=1000,height=700');
-        if (!printWindow) {
-          alert('A böngésző letiltotta a felugró ablakot. Kérjük engedélyezze a felugró ablakokat a nyomtatáshoz!');
-          return;
-        }
+        const oldFrame = document.getElementById('printIframe');
+        if (oldFrame) oldFrame.remove();
+
+        const iframe = document.createElement('iframe');
+        iframe.id = 'printIframe';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        document.body.appendChild(iframe);
 
         const today = new Date();
         const formattedToday = today.getFullYear() + '. ' + String(today.getMonth()+1).padStart(2, '0') + '. ' + String(today.getDate()).padStart(2, '0') + '.';
 
-        printWindow.document.write(`
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
           <!DOCTYPE html>
           <html lang="hu">
           <head>
@@ -1419,7 +1350,7 @@
             <style>
               @page {
                 size: A4 landscape;
-                margin: 6mm;
+                margin: 5mm;
               }
               body {
                 font-family: Arial, Helvetica, sans-serif;
@@ -1430,7 +1361,7 @@
               }
               .print-table-container {
                 width: 100%;
-                max-width: 275mm;
+                max-width: 278mm;
                 margin: 0 auto;
                 border: 2px solid #000;
                 box-sizing: border-box;
@@ -1442,7 +1373,7 @@
               }
               .print-header-table td {
                 border-right: 1px solid #000;
-                padding: 6px 10px;
+                padding: 5px 8px;
                 vertical-align: middle;
               }
               .print-header-table td:last-child {
@@ -1454,19 +1385,19 @@
               }
               .print-main-table td {
                 border: 1px solid #000;
-                padding: 6px 10px;
+                padding: 5px 8px;
                 vertical-align: top;
               }
               .print-label {
                 font-weight: bold;
                 font-size: 10px;
-                margin-bottom: 2px;
+                margin-bottom: 1px;
                 text-transform: uppercase;
-                color: #333;
+                color: #222;
               }
               .print-value {
-                font-size: 13px;
-                min-height: 18px;
+                font-size: 12px;
+                min-height: 16px;
                 font-weight: bold;
               }
             </style>
@@ -1476,12 +1407,12 @@
               <table class="print-header-table">
                 <tr>
                   <td style="width: 25%; text-align: center;">
-                    <strong style="font-size: 15px; color: #002855;">MVM</strong> <br><span style="font-size: 10px;">Paksi Atomerőmű</span>
+                    <strong style="font-size: 14px; color: #002855;">MVM</strong> <span style="font-size: 9px;">Paksi Atomerőmű</span>
                   </td>
                   <td style="width: 50%; text-align: center;">
-                    <strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
+                    <strong style="font-size: 15px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
                   </td>
-                  <td style="width: 25%; text-align: center; font-size: 11px; font-weight: bold;">
+                  <td style="width: 25%; text-align: center; font-size: 10px; font-weight: bold;">
                     TMI404_NY07_V01
                   </td>
                 </tr>
@@ -1491,11 +1422,11 @@
                 <tr>
                   <td style="width: 50%;">
                     <div class="print-label">Alfanumerika:</div>
-                    <div class="print-value" style="font-size: 15px; font-family: monospace;">${printData.alfanumerika}</div>
+                    <div class="print-value" style="font-size: 14px; font-family: monospace;">${printData.alfanumerika}</div>
                   </td>
                   <td style="width: 50%;">
                     <div class="print-label">MUT Feladat:</div>
-                    <div class="print-value" style="font-size: 15px; font-family: monospace; color: #002855;">${printData.mut}</div>
+                    <div class="print-value" style="font-size: 14px; font-family: monospace; color: #002855;">${printData.mut}</div>
                   </td>
                 </tr>
                 <tr>
@@ -1570,7 +1501,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="height: 40px;">
+                  <td colspan="2" style="height: 35px;">
                     <div class="print-label">Megjegyzés:</div>
                     <div class="print-value" style="font-weight: normal; font-size: 11px;">${printData.megjegyzes}</div>
                   </td>
@@ -1578,7 +1509,7 @@
               </table>
             </div>
 
-            <div style="font-size: 9px; display: flex; justify-content: space-between; margin-top: 4px; color: #333;">
+            <div style="font-size: 8px; display: flex; justify-content: space-between; margin-top: 3px; color: #333;">
               <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: ${formattedToday}</div>
               <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
               <div>1 / 1 oldal</div>
@@ -1586,13 +1517,15 @@
 
             <script>
               window.onload = function() {
-                window.print();
+                setTimeout(function() {
+                  window.print();
+                }, 100);
               };
             </script>
           </body>
           </html>
         `);
-        printWindow.document.close();
+        doc.close();
       }
 
       // Gyors nyomtatás gomb a táblázatból
