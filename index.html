@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj4t0keadBFvii8plsoGDH6fIw7pcD6AbUH6Pie7cxt4g453DUAodCQbYjGaz9CasP3g/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0Sf1zOMobFop3Y27d2Y6-0hXFjbAp2dNFpt157xE5y3qgQZJZXPHqIoLj8v08zY0Mdg/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -833,121 +833,6 @@
     </div>
   </main>
 
-  <!-- LÁTHATATLAN NYOMTATÁSI TERÜLET (TMI404_NY07_V01 - Biztosan 1 oldal fekvő A4) -->
-  <div id="printArea">
-    <div class="print-table-container">
-      <table class="print-header-table">
-        <tr>
-          <td style="width: 25%; text-align: center;">
-            <strong style="font-size: 14px; color: #002855;">MVM</strong> <span style="font-size: 9px;">Paksi Atomerőmű</span>
-          </td>
-          <td style="width: 50%; text-align: center;">
-            <strong style="font-size: 15px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
-          </td>
-          <td style="width: 25%; text-align: center; font-size: 10px; font-weight: bold;">
-            TMI404_NY07_V01
-          </td>
-        </tr>
-      </table>
-
-      <table class="print-main-table">
-        <tr>
-          <td style="width: 50%;">
-            <div class="print-label">Alfanumerika:</div>
-            <div class="print-value" id="pAlfanumerika" style="font-weight: bold; font-size: 13px;">-</div>
-          </td>
-          <td style="width: 50%;">
-            <div class="print-label">MUT Feladat:</div>
-            <div class="print-value" id="pMut" style="font-weight: bold; font-size: 13px;">-</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="width: 50%;">
-            <div class="print-label">Felelős munkavezető:</div>
-            <div class="print-value" id="pMunkavezető" style="font-weight: bold;">-</div>
-          </td>
-          <td style="width: 50%;">
-            <div class="print-label">MUT Feladat koordináló:</div>
-            <div class="print-value" id="pKoordináló" style="font-weight: bold;">-</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="width: 50%;">
-            <table style="width: 100%; border: none;">
-              <tr>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Telefon:</div>
-                  <div class="print-value" id="pMunkavTel">-</div>
-                </td>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Rádió:</div>
-                  <div class="print-value" id="pMunkavRadio">-</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-          <td style="width: 50%;">
-            <table style="width: 100%; border: none;">
-              <tr>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Telefon:</div>
-                  <div class="print-value" id="pKoordTel">-</div>
-                </td>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Rádió:</div>
-                  <div class="print-value" id="pKoordRadio">-</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div class="print-label">Munkát végző szervezet (cég):</div>
-            <div class="print-value" id="pCeg">PA Zrt. BRO</div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div class="print-label">A munka megnevezése:</div>
-            <div class="print-value" id="pMunkaMegnevezes">Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="width: 35%;">
-            <div class="print-label">A munka tervezett időtartama:</div>
-          </td>
-          <td style="width: 65%;">
-            <table style="width: 100%; border: none; text-align: center;">
-              <tr>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Kezdés:</div>
-                  <div class="print-value" id="pKezdes">-</div>
-                </td>
-                <td style="border: none; padding: 0; width: 50%;">
-                  <div class="print-label">Befejezés:</div>
-                  <div class="print-value" id="pBefejezes">-</div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" style="height: 30px;">
-            <div class="print-label">Megjegyzés:</div>
-            <div class="print-value" id="pMegjegyzes">-</div>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div style="font-size: 8px; display: flex; justify-content: space-between; margin-top: 2px; color: #333;">
-      <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: <span id="pNyomtatasiDatum"></span></div>
-      <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
-      <div>1 / 1 oldal</div>
-    </div>
-  </div>
-
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -1514,49 +1399,231 @@
         updateStatusModal.show();
       };
 
-      // --- NYOMTATÁSI LOGIKA (TMI404_NY07_V01) ---
-      function printFormDocument(row, munkavezető, ceg, munkavTel, koordRadio, munkaMegnevezes) {
-        document.getElementById('pAlfanumerika').textContent = row.alfanumerika || '-';
-        document.getElementById('pMut').textContent = row.mut || '-';
-
-        document.getElementById('pMunkavezető').textContent = munkavezető || row.muszeresz || '-';
-
-        const koordNev = row.rogzito || 'Tóth Tamás';
-        document.getElementById('pKoordináló').textContent = koordNev;
-
-        let koordTel = '85-37';
-        if (koordNev.includes('Krasznai')) {
-          koordTel = '75-91';
-        } else if (koordNev.includes('Csötönyi')) {
-          koordTel = '69-37';
+      // --- BIZTONSÁGOS KÖZVETLEN NYOMTATÁSI ABLAK GENERÁLÁS ---
+      function executePrint(printData) {
+        const printWindow = window.open('', '_blank', 'width=1000,height=700');
+        if (!printWindow) {
+          alert('A böngésző letiltotta a felugró ablakot. Kérjük engedélyezze a felugró ablakokat a nyomtatáshoz!');
+          return;
         }
-        
-        document.getElementById('pKoordTel').textContent = koordTel;
-        document.getElementById('pKoordRadio').textContent = koordRadio || 'BRO1';
-
-        document.getElementById('pMunkavTel').textContent = munkavTel || '-';
-        document.getElementById('pMunkavRadio').textContent = 'BRO 1, 6';
-
-        document.getElementById('pCeg').textContent = ceg || 'PA Zrt. BRO';
-        document.getElementById('pMunkaMegnevezes').textContent = munkaMegnevezes || 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.';
-
-        document.getElementById('pKezdes').textContent = row.idobelyeg || '-';
-        document.getElementById('pBefejezes').textContent = row.hatarido || '-';
-        document.getElementById('pMegjegyzes').textContent = row.megjegyzes || '-';
 
         const today = new Date();
         const formattedToday = today.getFullYear() + '. ' + String(today.getMonth()+1).padStart(2, '0') + '. ' + String(today.getDate()).padStart(2, '0') + '.';
-        document.getElementById('pNyomtatasiDatum').textContent = formattedToday;
 
-        window.print();
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html lang="hu">
+          <head>
+            <meta charset="UTF-8">
+            <title>Munkaterület Azonosító Tábla - ${printData.mut}</title>
+            <style>
+              @page {
+                size: A4 landscape;
+                margin: 6mm;
+              }
+              body {
+                font-family: Arial, Helvetica, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: #fff;
+                color: #000;
+              }
+              .print-table-container {
+                width: 100%;
+                max-width: 275mm;
+                margin: 0 auto;
+                border: 2px solid #000;
+                box-sizing: border-box;
+              }
+              .print-header-table {
+                width: 100%;
+                border-collapse: collapse;
+                border-bottom: 2px solid #000;
+              }
+              .print-header-table td {
+                border-right: 1px solid #000;
+                padding: 6px 10px;
+                vertical-align: middle;
+              }
+              .print-header-table td:last-child {
+                border-right: none;
+              }
+              .print-main-table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              .print-main-table td {
+                border: 1px solid #000;
+                padding: 6px 10px;
+                vertical-align: top;
+              }
+              .print-label {
+                font-weight: bold;
+                font-size: 10px;
+                margin-bottom: 2px;
+                text-transform: uppercase;
+                color: #333;
+              }
+              .print-value {
+                font-size: 13px;
+                min-height: 18px;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="print-table-container">
+              <table class="print-header-table">
+                <tr>
+                  <td style="width: 25%; text-align: center;">
+                    <strong style="font-size: 15px; color: #002855;">MVM</strong> <br><span style="font-size: 10px;">Paksi Atomerőmű</span>
+                  </td>
+                  <td style="width: 50%; text-align: center;">
+                    <strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
+                  </td>
+                  <td style="width: 25%; text-align: center; font-size: 11px; font-weight: bold;">
+                    TMI404_NY07_V01
+                  </td>
+                </tr>
+              </table>
+
+              <table class="print-main-table">
+                <tr>
+                  <td style="width: 50%;">
+                    <div class="print-label">Alfanumerika:</div>
+                    <div class="print-value" style="font-size: 15px; font-family: monospace;">${printData.alfanumerika}</div>
+                  </td>
+                  <td style="width: 50%;">
+                    <div class="print-label">MUT Feladat:</div>
+                    <div class="print-value" style="font-size: 15px; font-family: monospace; color: #002855;">${printData.mut}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 50%;">
+                    <div class="print-label">Felelős munkavezető:</div>
+                    <div class="print-value">${printData.munkavezető}</div>
+                  </td>
+                  <td style="width: 50%;">
+                    <div class="print-label">MUT Feladat koordináló:</div>
+                    <div class="print-value">${printData.koordináló}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 50%;">
+                    <table style="width: 100%; border: none;">
+                      <tr>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Telefon:</div>
+                          <div class="print-value">${printData.munkavTel}</div>
+                        </td>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Rádió:</div>
+                          <div class="print-value">${printData.munkavRadio}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="width: 50%;">
+                    <table style="width: 100%; border: none;">
+                      <tr>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Telefon:</div>
+                          <div class="print-value">${printData.koordTel}</div>
+                        </td>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Rádió:</div>
+                          <div class="print-value">${printData.koordRadio}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <div class="print-label">Munkát végző szervezet (cég):</div>
+                    <div class="print-value">${printData.ceg}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <div class="print-label">A munka megnevezése:</div>
+                    <div class="print-value" style="font-weight: normal;">${printData.munkaMegnevezes}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 35%;">
+                    <div class="print-label">A munka tervezett időtartama:</div>
+                  </td>
+                  <td style="width: 65%;">
+                    <table style="width: 100%; border: none; text-align: center;">
+                      <tr>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Kezdés:</div>
+                          <div class="print-value">${printData.kezdes}</div>
+                        </td>
+                        <td style="border: none; padding: 0; width: 50%;">
+                          <div class="print-label">Befejezés:</div>
+                          <div class="print-value">${printData.befejezes}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="height: 40px;">
+                    <div class="print-label">Megjegyzés:</div>
+                    <div class="print-value" style="font-weight: normal; font-size: 11px;">${printData.megjegyzes}</div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="font-size: 9px; display: flex; justify-content: space-between; margin-top: 4px; color: #333;">
+              <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: ${formattedToday}</div>
+              <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
+              <div>1 / 1 oldal</div>
+            </div>
+
+            <script>
+              window.onload = function() {
+                window.print();
+              };
+            </script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
       }
 
       // Gyors nyomtatás gomb a táblázatból
       window.quickPrint = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
-        const firstTech = row.muszeresz ? row.muszeresz.split(',')[0].split(' (')[0] : '';
-        printFormDocument(row, firstTech, 'PA Zrt. BRO', '', 'BRO1', 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.');
+
+        const firstTech = row.muszeresz ? row.muszeresz.split(',')[0].split(' (')[0] : 'Nincs megadva';
+        const koordNev = row.rogzito || 'Tóth Tamás';
+        
+        let koordTel = '85-37';
+        if (koordNev.includes('Krasznai')) koordTel = '75-91';
+        else if (koordNev.includes('Csötönyi')) koordTel = '69-37';
+
+        const printData = {
+          mut: row.mut || '-',
+          alfanumerika: row.alfanumerika || '-',
+          munkavezető: firstTech,
+          koordináló: koordNev,
+          munkavTel: '-',
+          munkavRadio: 'BRO 1, 6',
+          koordTel: koordTel,
+          koordRadio: 'BRO1',
+          ceg: 'PA Zrt. BRO',
+          munkaMegnevezes: 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.',
+          kezdes: row.idobelyeg || '-',
+          befejezes: row.hatarido || '-',
+          megjegyzes: row.megjegyzes || 'Nincs megjegyzés.'
+        };
+
+        executePrint(printData);
       };
 
       // Nyomtatás a modal ablakból
@@ -1565,15 +1632,28 @@
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
 
-        row.rogzito = document.getElementById('updateRogzito').value;
+        const koordNev = document.getElementById('updateRogzito').value || row.rogzito || 'Tóth Tamás';
+        let koordTel = '85-37';
+        if (koordNev.includes('Krasznai')) koordTel = '75-91';
+        else if (koordNev.includes('Csötönyi')) koordTel = '69-37';
 
-        const munkav = document.getElementById('printMunkavezető').value;
-        const ceg = document.getElementById('printCeg').value;
-        const munkavTel = document.getElementById('printMunkavezetőTel').value;
-        const koordRadio = document.getElementById('printKoordRadio').value;
-        const munkaMegnevezes = document.getElementById('printMunkaMegnevezese').value;
+        const printData = {
+          mut: row.mut || '-',
+          alfanumerika: row.alfanumerika || '-',
+          munkavezető: document.getElementById('printMunkavezető').value || (row.muszeresz ? row.muszeresz.split(',')[0].split(' (')[0] : 'Nincs megadva'),
+          koordináló: koordNev,
+          munkavTel: document.getElementById('printMunkavezetőTel').value || '-',
+          munkavRadio: 'BRO 1, 6',
+          koordTel: koordTel,
+          koordRadio: document.getElementById('printKoordRadio').value || 'BRO1',
+          ceg: document.getElementById('printCeg').value || 'PA Zrt. BRO',
+          munkaMegnevezes: document.getElementById('printMunkaMegnevezese').value || 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.',
+          kezdes: row.idobelyeg || '-',
+          befejezes: row.hatarido || '-',
+          megjegyzes: row.megjegyzes || 'Nincs megjegyzés.'
+        };
 
-        printFormDocument(row, munkav, ceg, munkavTel, koordRadio, munkaMegnevezes);
+        executePrint(printData);
       };
 
       // MUT törlése PIN kóddal
