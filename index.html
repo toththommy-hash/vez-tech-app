@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzl11uGKB_kfnXX5KHd72vwySWaStBrlzaYffdV3Q4vEyFgPV3jSBs3YRL-Tjt1eK65Mw/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxtPgKO16pV2uLopSzIugU41AJrNkzkxTihFhGLx4nmmzoGMlt-P9tD1x3qpabuhUQ_g/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -203,7 +203,6 @@
       margin-top: 3px;
     }
 
-    /* Megjegyzés ikon stílusa a táblázatban */
     .note-indicator-icon {
       color: #2563eb;
       font-size: 1rem;
@@ -214,6 +213,14 @@
       transform: scale(1.25);
     }
 
+    /* KPI Statisztika kártyák */
+    .kpi-card {
+      border-radius: 10px;
+      padding: 1rem;
+      color: #fff;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+
     footer {
       margin-top: auto;
       padding: 1.2rem 0;
@@ -221,6 +228,74 @@
       border-top: 1px solid #e5e7eb;
       color: #6b7280;
       font-size: 0.85rem;
+    }
+
+    /* --- NYOMTATÁSI NÉZET STÍLUSA (TMI404_NY07_V01) --- */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+    }
+
+    .print-table-container {
+      width: 100%;
+      border: 2px solid #000;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+    }
+
+    .print-header-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-bottom: 2px solid #000;
+    }
+
+    .print-header-table td {
+      border-right: 1px solid #000;
+      padding: 8px 12px;
+      vertical-align: middle;
+    }
+
+    .print-header-table td:last-child {
+      border-right: none;
+    }
+
+    .print-main-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .print-main-table td, .print-main-table th {
+      border: 1px solid #000;
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+
+    .print-label {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .print-value {
+      font-size: 15px;
+      min-height: 24px;
     }
   </style>
 </head>
@@ -261,9 +336,50 @@
 
   <!-- Fő Tartalom -->
   <main class="container-fluid-custom mb-5">
+    
+    <!-- Gyorsstatisztika KPI Sáv -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-6">
+        <div class="kpi-card bg-primary d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small text-white-50 text-uppercase fw-semibold">Összes Mut</div>
+            <div class="fs-4 fw-bold" id="kpiTotal">0</div>
+          </div>
+          <i class="bi bi-collection fs-1 text-white-50"></i>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="kpi-card bg-danger d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small text-white-50 text-uppercase fw-semibold">Lejárt / Ma lejár</div>
+            <div class="fs-4 fw-bold" id="kpiAlerts">0</div>
+          </div>
+          <i class="bi bi-exclamation-triangle fs-1 text-white-50"></i>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="kpi-card bg-warning text-dark d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small text-dark-50 text-uppercase fw-semibold" style="opacity:0.8;">Beérkezett</div>
+            <div class="fs-4 fw-bold" id="kpiBeerkezett">0</div>
+          </div>
+          <i class="bi bi-inbox fs-1" style="opacity:0.5;"></i>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="kpi-card bg-success d-flex align-items-center justify-content-between">
+          <div>
+            <div class="small text-white-50 text-uppercase fw-semibold">Elvégezve</div>
+            <div class="fs-4 fw-bold" id="kpiElvegezve">0</div>
+          </div>
+          <i class="bi bi-check-circle fs-1 text-white-50"></i>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       
-      <!-- Bal oldal: Adatrögzítő Űrlap -->
+      <!-- Bal oldal: Adatrögzítő Űrlap (MUT szám felül) -->
       <div class="col-xl-4 col-lg-5">
         <div class="card">
           <div class="card-header d-flex align-items-center">
@@ -275,20 +391,11 @@
             <form id="mUKForm">
               
               <div class="mb-3">
-                <label for="rogzito" class="form-label fw-semibold small text-muted text-uppercase">Rögzítő Neve</label>
-                <select class="form-select" id="rogzito" required>
-                  <option value="" disabled selected>Válassza ki a nevét...</option>
-                  <option value="Debreczeni Tibor">Debreczeni Tibor</option>
-                  <option value="Inger József">Inger József</option>
-                  <option value="Józsa Gábor">Józsa Gábor</option>
-                  <option value="Krasznai Iván">Krasznai Iván</option>
-                  <option value="Pálosi Attila">Pálosi Attila</option>
-                  <option value="Tóth Péter">Tóth Péter</option>
-                  <option value="Tóth Tamás">Tóth Tamás</option>
-                  <option value="Vonya István">Vonya István</option>
-                  <option value="Balázs Bálint">Balázs Bálint</option>
-                  <option value="Kovács Szabolcs">Kovács Szabolcs</option>
-                </select>
+                <label for="mut" class="form-label fw-semibold small text-muted text-uppercase">MUT szám <span class="text-danger">*</span></label>
+                <input type="text" class="form-control font-monospace fw-bold text-primary" id="mut" placeholder="00000000/00" maxlength="11" required autofocus>
+                <div id="mutDuplicateError" class="text-danger small mt-1 d-none fw-bold">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i>Ez a MUT szám már létezik!
+                </div>
               </div>
 
               <div class="mb-3">
@@ -309,11 +416,20 @@
               </div>
 
               <div class="mb-3">
-                <label for="mut" class="form-label fw-semibold small text-muted text-uppercase">MUT szám <span class="text-danger">*</span></label>
-                <input type="text" class="form-control font-monospace" id="mut" placeholder="00000000/00" maxlength="11" required>
-                <div id="mutDuplicateError" class="text-danger small mt-1 d-none fw-bold">
-                  <i class="bi bi-exclamation-triangle-fill me-1"></i>Ez a MUT szám már létezik!
-                </div>
+                <label for="rogzito" class="form-label fw-semibold small text-muted text-uppercase">Rögzítő / Koordináló Neve</label>
+                <select class="form-select" id="rogzito" required>
+                  <option value="" disabled selected>Válassza ki a nevét...</option>
+                  <option value="Tóth Tamás" selected>Tóth Tamás (85-37)</option>
+                  <option value="Krasznai Iván">Krasznai Iván (75-91)</option>
+                  <option value="Debreczeni Tibor">Debreczeni Tibor</option>
+                  <option value="Inger József">Inger József</option>
+                  <option value="Józsa Gábor">Józsa Gábor</option>
+                  <option value="Pálosi Attila">Pálosi Attila</option>
+                  <option value="Tóth Péter">Tóth Péter</option>
+                  <option value="Vonya István">Vonya István</option>
+                  <option value="Balázs Bálint">Balázs Bálint</option>
+                  <option value="Kovács Szabolcs">Kovács Szabolcs</option>
+                </select>
               </div>
 
               <div class="mb-3">
@@ -502,38 +618,39 @@
     </div>
   </div>
 
-  <!-- Szerkesztés Modal -->
+  <!-- Szerkesztés & Nyomtatás Modal -->
   <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
-        <div class="modal-header bg-warning text-dark border-0" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
-          <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square me-2"></i>Munkakiosztás, Módosítás & Tapasztalatok</h5>
+        <div class="modal-header bg-warning text-dark border-0 d-flex justify-content-between align-items-center" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
+          <h5 class="modal-title fw-bold mb-0"><i class="bi bi-pencil-square me-2"></i>Munkakiosztás, Módosítás & Tapasztalatok</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
         </div>
         <div class="modal-body p-4">
           <form id="updateStatusForm">
             <input type="hidden" id="updateRowIndex">
             
-            <div class="mb-3">
-              <label class="form-label fw-semibold small text-muted text-uppercase">MUT szám</label>
-              <input type="text" class="form-control bg-light font-monospace fw-bold text-primary" id="updateMutTitle" readonly>
-            </div>
-
-            <div class="mb-3">
-              <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-badge me-1 text-warning"></i>Módosító Neve</label>
-              <select class="form-select" id="updateRogzito" required>
-                <option value="" disabled selected>Válassza ki a nevét...</option>
-                <option value="Debreczeni Tibor">Debreczeni Tibor</option>
-                <option value="Inger József">Inger József</option>
-                <option value="Józsa Gábor">Józsa Gábor</option>
-                <option value="Krasznai Iván">Krasznai Iván</option>
-                <option value="Pálosi Attila">Pálosi Attila</option>
-                <option value="Tóth Péter">Tóth Péter</option>
-                <option value="Tóth Tamás">Tóth Tamás</option>
-                <option value="Vonya István">Vonya István</option>
-                <option value="Balázs Bálint">Balázs Bálint</option>
-                <option value="Kovács Szabolcs">Kovács Szabolcs</option>
-              </select>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold small text-muted text-uppercase">MUT szám</label>
+                <input type="text" class="form-control bg-light font-monospace fw-bold text-primary" id="updateMutTitle" readonly>
+              </div>
+              <div class="col-md-6">
+                <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-badge me-1 text-warning"></i>Módosító / Koordináló Neve</label>
+                <select class="form-select" id="updateRogzito" required>
+                  <option value="" disabled selected>Válassza ki a nevét...</option>
+                  <option value="Tóth Tamás">Tóth Tamás (85-37)</option>
+                  <option value="Krasznai Iván">Krasznai Iván (75-91)</option>
+                  <option value="Debreczeni Tibor">Debreczeni Tibor</option>
+                  <option value="Inger József">Inger József</option>
+                  <option value="Józsa Gábor">Józsa Gábor</option>
+                  <option value="Pálosi Attila">Pálosi Attila</option>
+                  <option value="Tóth Péter">Tóth Péter</option>
+                  <option value="Vonya István">Vonya István</option>
+                  <option value="Balázs Bálint">Balázs Bálint</option>
+                  <option value="Kovács Szabolcs">Kovács Szabolcs</option>
+                </select>
+              </div>
             </div>
 
             <div class="mb-3">
@@ -596,6 +713,35 @@
               </div>
             </div>
 
+            <!-- NYOMTATVÁNY PLUSZ ADATOK -->
+            <div class="card bg-light border p-3 mb-3">
+              <h6 class="fw-bold text-dark small text-uppercase mb-2"><i class="bi bi-printer me-1 text-primary"></i>Nyomtatvány Adatok (Munkaterület Azonosító Tábla)</h6>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <label class="form-label small text-muted mb-1">Felelős munkavezető</label>
+                  <select class="form-select form-select-sm" id="printMunkavezető">
+                    <option value="">Válasszon a kijelölt műszerészekből...</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-muted mb-1">Munkát végző szervezet (cég)</label>
+                  <input type="text" class="form-control form-control-sm" id="printCeg" value="PA Zrt. BRO">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-muted mb-1">Munkavezető Telefon / Rádió</label>
+                  <input type="text" class="form-control form-control-sm" id="printMunkavezetőTel" placeholder="Pl. Rádió: BRO 1">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-muted mb-1">Koordináló Rádió csatorna</label>
+                  <input type="text" class="form-control form-control-sm" id="printKoordRadio" value="BRO1">
+                </div>
+                <div class="col-12">
+                  <label class="form-label small text-muted mb-1">A munka megnevezése</label>
+                  <input type="text" class="form-control form-control-sm" id="printMunkaMegnevezese" value="Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.">
+                </div>
+              </div>
+            </div>
+
             <div class="mb-3">
               <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késői befejezés módosítása</label>
               <input type="date" class="form-control" id="updateHatarido" required>
@@ -620,12 +766,132 @@
               <div class="form-text text-muted small">Az ide beírt megjegyzés időbélyeggel és neveddel hozzáfűződik a korábbiakhoz.</div>
             </div>
 
-            <button type="submit" class="btn btn-warning w-100 fw-bold py-2.5 shadow-sm">
-              <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
-            </button>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-dark fw-bold py-2.5 w-50" onclick="triggerFormPrint()">
+                <i class="bi bi-printer me-1"></i>Tábla Nyomtatása
+              </button>
+              <button type="submit" class="btn btn-warning w-50 fw-bold py-2.5 shadow-sm">
+                <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
+              </button>
+            </div>
           </form>
         </div>
       </div>
+    </div>
+  </main>
+
+  <!-- LÁTHATATLAN NYOMTATÁSI TERÜLET (TMI404_NY07_V01 sablon) -->
+  <div id="printArea" class="d-none">
+    <div class="print-table-container">
+      <table class="print-header-table">
+        <tr>
+          <td style="width: 25%; text-align: center;">
+            <strong style="font-size: 18px; color: #002855;">MVM</strong> <span style="font-size: 11px;">Paksi Atomerőmű</span>
+          </td>
+          <td style="width: 50%; text-align: center;">
+            <strong style="font-size: 20px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
+          </td>
+          <td style="width: 25%; text-align: center; font-size: 13px; font-weight: bold;">
+            TMI404_NY07_V01
+          </td>
+        </tr>
+      </table>
+
+      <table class="print-main-table">
+        <tr>
+          <td style="width: 50%;">
+            <div class="print-label">Alfanumerika:</div>
+            <div class="print-value" id="pAlfanumerika" style="font-weight: bold; font-size: 18px;">-</div>
+          </td>
+          <td style="width: 50%;">
+            <div class="print-label">MUT Feladat:</div>
+            <div class="print-value" id="pMut" style="font-weight: bold; font-size: 18px;">-</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 50%;">
+            <div class="print-label">Felelős munkavezető:</div>
+            <div class="print-value" id="pMunkavezető">-</div>
+          </td>
+          <td style="width: 50%;">
+            <div class="print-label">MUT Feladat koordináló:</div>
+            <div class="print-value" id="pKoordináló">-</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 50%;">
+            <table style="width: 100%; border: none;">
+              <tr>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Telefon:</div>
+                  <div class="print-value" id="pMunkavTel">-</div>
+                </td>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Rádió:</div>
+                  <div class="print-value" id="pMunkavRadio">-</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td style="width: 50%;">
+            <table style="width: 100%; border: none;">
+              <tr>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Telefon:</div>
+                  <div class="print-value" id="pKoordTel">-</div>
+                </td>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Rádió:</div>
+                  <div class="print-value" id="pKoordRadio">-</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="print-label">Munkát végző szervezet (cég):</div>
+            <div class="print-value" id="pCeg">PA Zrt. BRO</div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="print-label">A munka megnevezése:</div>
+            <div class="print-value" id="pMunkaMegnevezes">Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 35%;">
+            <div class="print-label">A munka tervezett időtartama:</div>
+          </td>
+          <td style="width: 65%;">
+            <table style="width: 100%; border: none; text-align: center;">
+              <tr>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Kezdés:</div>
+                  <div class="print-value" id="pKezdes">-</div>
+                </td>
+                <td style="border: none; padding: 0; width: 50%;">
+                  <div class="print-label">Befejezés:</div>
+                  <div class="print-value" id="pBefejezes">-</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="height: 90px;">
+            <div class="print-label">Megjegyzés:</div>
+            <div class="print-value" id="pMegjegyzes">-</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="font-size: 9px; display: flex; justify-content: space-between; margin-top: 6px; color: #333;">
+      <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: <span id="pNyomtatasiDatum"></span></div>
+      <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
+      <div>1 / 1 oldal</div>
     </div>
   </div>
 
@@ -699,7 +965,32 @@
 
       newStatuszSelect.addEventListener('change', handleBasisStatusChange);
 
-      // MUT szám automatikus maszkolása (/ jel az utolsó 2 karakter előtt)
+      // Frissíti a nyomtatvány munkavezető opcióit a bepipált műszerészekből
+      function updateMunkavezetőOptions() {
+        const munkavSelect = document.getElementById('printMunkavezető');
+        const checkedTechs = document.querySelectorAll('.update-tech-check:checked');
+        const currentVal = munkavSelect.value;
+        
+        munkavSelect.innerHTML = '<option value="">Válasszon a kijelölt műszerészekből...</option>';
+        checkedTechs.forEach(cb => {
+          const nameOnly = cb.value.split(' (')[0];
+          const opt = document.createElement('option');
+          opt.value = nameOnly;
+          opt.textContent = nameOnly;
+          if (nameOnly === currentVal) opt.selected = true;
+          munkavSelect.appendChild(opt);
+        });
+
+        if (checkedTechs.length > 0 && !munkavSelect.value) {
+          munkavSelect.selectedIndex = 1;
+        }
+      }
+
+      document.querySelectorAll('.update-tech-check').forEach(cb => {
+        cb.addEventListener('change', updateMunkavezetőOptions);
+      });
+
+      // MUT szám szigorú fix formátumú maszkolása (00000000/00)
       mutInput.addEventListener('input', function(e) {
         let val = this.value.replace(/[^0-9]/g, '');
         if (val.length > 8) {
@@ -753,6 +1044,7 @@
           .then(data => {
             allData = data;
             renderTable(allData);
+            updateKpiCounters(allData);
           })
           .catch(err => {
             console.error('Hiba az adatok lekérésekor:', err);
@@ -761,6 +1053,33 @@
       }
 
       refreshBtn.addEventListener('click', loadData);
+
+      // KPI kártyák frissítése
+      function updateKpiCounters(data) {
+        if (!data) return;
+        const total = data.length;
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+
+        let alertsCount = 0;
+        let beerkezettCount = 0;
+        let elvegezveCount = 0;
+
+        data.forEach(row => {
+          const normDate = normalizeDate(row.hatarido);
+          const isClosed = row.statusz === 'Elvégezve';
+          if (normDate && !isClosed && normDate <= todayStr) {
+            alertsCount++;
+          }
+          if (row.statusz === 'Beérkezett') beerkezettCount++;
+          if (row.statusz === 'Elvégezve') elvegezveCount++;
+        });
+
+        document.getElementById('kpiTotal').textContent = total;
+        document.getElementById('kpiAlerts').textContent = alertsCount;
+        document.getElementById('kpiBeerkezett').textContent = beerkezettCount;
+        document.getElementById('kpiElvegezve').textContent = elvegezveCount;
+      }
 
       // ÚJ MUT RÖGZÍTÉS
       form.addEventListener('submit', function(e) {
@@ -962,7 +1281,8 @@
               <td class="text-center">
                 <div class="btn-group btn-group-sm shadow-sm rounded">
                   <button class="btn btn-outline-secondary bg-white" onclick="viewDetails(${row.rowIndex})" title="Részletek"><i class="bi bi-eye"></i></button>
-                  <button class="btn btn-outline-warning bg-white text-dark" onclick="openUpdateModal(${row.rowIndex})" title="Módosítás / Kiosztás"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-outline-warning bg-white text-dark" onclick="openUpdateModal(${row.rowIndex})" title="Módosítás / Kiosztás / Nyomtatás"><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-outline-dark bg-white" onclick="quickPrint(${row.rowIndex})" title="Munkaterület Tábla Nyomtatása"><i class="bi bi-printer"></i></button>
                   <button class="btn btn-outline-danger bg-white" onclick="deleteRecord(${row.rowIndex}, '${row.mut || ''}')" title="Törlés"><i class="bi bi-trash"></i></button>
                 </div>
               </td>
@@ -1037,6 +1357,7 @@
         });
 
         handleBasisStatusChange();
+        updateMunkavezetőOptions();
 
         const isUtemezett = String(row.ciklusfigyeles).trim().toLowerCase() === 'igen';
         updateCiklusSwitch.checked = isUtemezett;
@@ -1051,6 +1372,62 @@
         document.getElementById('updateNote').value = '';
 
         updateStatusModal.show();
+      };
+
+      // --- NYOMTATÁSI LOGIKA (TMI404_NY07_V01) ---
+      function printFormDocument(row, munkavezető, ceg, munkavTel, koordRadio, munkaMegnevezes) {
+        document.getElementById('pAlfanumerika').textContent = row.alfanumerika || '-';
+        document.getElementById('pMut').textContent = row.mut || '-';
+
+        document.getElementById('pMunkavezető').textContent = munkavezető || row.muszeresz || '-';
+
+        const koordNev = row.rogzito || 'Tóth Tamás';
+        document.getElementById('pKoordináló').textContent = koordNev;
+
+        // Telefon automatikus hozzárendelés Koordinálóhoz
+        let koordTel = '85-37';
+        if (koordNev.includes('Krasznai')) koordTel = '75-91';
+        document.getElementById('pKoordTel').textContent = koordTel;
+        document.getElementById('pKoordRadio').textContent = koordRadio || 'BRO1';
+
+        document.getElementById('pMunkavTel').textContent = munkavTel || '-';
+        document.getElementById('pMunkavRadio').textContent = 'BRO 1, 6';
+
+        document.getElementById('pCeg').textContent = ceg || 'PA Zrt. BRO';
+        document.getElementById('pMunkaMegnevezes').textContent = munkaMegnevezes || 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.';
+
+        document.getElementById('pKezdes').textContent = row.idobelyeg || '-';
+        document.getElementById('pBefejezes').textContent = row.hatarido || '-';
+        document.getElementById('pMegjegyzes').textContent = row.megjegyzes || '-';
+
+        const today = new Date();
+        const formattedToday = today.getFullYear() + '. ' + String(today.getMonth()+1).padStart(2, '0') + '. ' + String(today.getDate()).padStart(2, '0') + '.';
+        document.getElementById('pNyomtatasiDatum').textContent = formattedToday;
+
+        window.print();
+      }
+
+      // Gyors nyomtatás gomb a táblázatból
+      window.quickPrint = function(rowIndex) {
+        const row = allData.find(r => r.rowIndex == rowIndex);
+        if (!row) return;
+        const firstTech = row.muszeresz ? row.muszeresz.split(',')[0].split(' (')[0] : '';
+        printFormDocument(row, firstTech, 'PA Zrt. BRO', '', 'BRO1', 'Karbantartás, kábelér kikötés, egyeztetés, üzembe helyezés.');
+      };
+
+      // Nyomtatás a modal ablakból
+      window.triggerFormPrint = function() {
+        const rowIndex = document.getElementById('updateRowIndex').value;
+        const row = allData.find(r => r.rowIndex == rowIndex);
+        if (!row) return;
+
+        const munkav = document.getElementById('printMunkavezető').value;
+        const ceg = document.getElementById('printCeg').value;
+        const munkavTel = document.getElementById('printMunkavezetőTel').value;
+        const koordRadio = document.getElementById('printKoordRadio').value;
+        const munkaMegnevezes = document.getElementById('printMunkaMegnevezese').value;
+
+        printFormDocument(row, munkav, ceg, munkavTel, koordRadio, munkaMegnevezes);
       };
 
       // MUT törlése PIN kóddal
