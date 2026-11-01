@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1P43SP3lkM_S2DhCaeRZ-KSfvygSVSTbHJVKfre16iMMN_iuLhBzAKazp6BG9ZhJKAA/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtgJCPzlm4obF4dFdRmnHRR78Dc8TdH136p1Y-hOEiS42EYSIRjA-G6xGm57aMXvT1_A/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -252,18 +252,20 @@
 </head>
 <body>
 
-  <!-- PIN Kód Védő Képernyő -->
+  <!-- PIN Kód Védő Képernyő (Egyszerűsített, közvetlen űrlap) -->
   <div id="pinOverlay">
     <div class="pin-card">
       <div class="text-primary fs-1 mb-3"><i class="bi bi-shield-lock-fill"></i></div>
       <h4 class="fw-bold mb-2 text-dark">Rendszer Belépés</h4>
       <p class="text-muted small mb-4">Kérjük, adja meg a hozzáférési PIN kódot!</p>
       
-      <div class="mb-3">
-        <input type="password" id="pinInput" class="form-control form-control-lg text-center fw-bold" placeholder="••••" autofocus>
-      </div>
-      <div id="pinError" class="text-danger small mb-3 d-none"><i class="bi bi-exclamation-circle me-1"></i>Hibás PIN kód!</div>
-      <button type="button" id="pinSubmitBtn" class="btn btn-custom-primary w-100 py-2.5 fs-6">Belépés</button>
+      <form id="pinForm" onsubmit="checkPin(event)">
+        <div class="mb-3">
+          <input type="password" id="pinInput" class="form-control form-control-lg text-center fw-bold" placeholder="••••" required autofocus autocomplete="current-password">
+        </div>
+        <div id="pinError" class="text-danger small mb-3 d-none"><i class="bi bi-exclamation-circle me-1"></i>Hibás PIN kód!</div>
+        <button type="submit" class="btn btn-custom-primary w-100 py-2.5 fs-6">Belépés</button>
+      </form>
     </div>
   </div>
 
@@ -754,13 +756,26 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    // GLOBÁLIS PIN ELLENŐRZŐ (Biztosan lefut gombnyomásra és Enterre is)
+    function checkPin(e) {
+      if (e) e.preventDefault();
+      const enteredPin = String(document.getElementById('pinInput').value).trim();
+      const expectedPin = String(SITE_PIN).trim();
+      const pinError = document.getElementById('pinError');
+      const pinOverlay = document.getElementById('pinOverlay');
+
+      if (enteredPin === expectedPin) {
+        pinOverlay.style.display = 'none';
+        loadData();
+      } else {
+        pinError.classList.remove('d-none');
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       
-      const pinOverlay = document.getElementById('pinOverlay');
-      const pinSubmitBtn = document.getElementById('pinSubmitBtn');
-      const pinInput = document.getElementById('pinInput');
-      const pinError = document.getElementById('pinError');
-
       const form = document.getElementById('mUKForm');
       const submitBtn = document.getElementById('submitBtn');
       const btnText = document.getElementById('btnText');
@@ -783,29 +798,6 @@
       const basisWarning = document.getElementById('basisWarning');
 
       let currentKpiFilter = 'all';
-
-      // --- PIN BEJELENTKEZÉS KEZELÉSE ---
-      function handlePinLogin() {
-        const enteredPin = String(pinInput.value).trim();
-        const expectedPin = String(SITE_PIN).trim();
-
-        if (enteredPin === expectedPin) {
-          pinOverlay.style.display = 'none';
-          loadData();
-        } else {
-          pinError.classList.remove('d-none');
-          pinInput.value = '';
-          pinInput.focus();
-        }
-      }
-
-      pinSubmitBtn.addEventListener('click', handlePinLogin);
-      pinInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          handlePinLogin();
-        }
-      });
 
       // Ütemezési dátum doboz megjelenítése/elrejtése
       ciklusSwitch.addEventListener('change', function() {
@@ -898,13 +890,13 @@
         }
       });
       
-      const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-      const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+      window.detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+      window.updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
 
-      let allData = [];
+      window.allData = [];
 
       // Adatok betöltése
-      function loadData() {
+      window.loadData = function() {
         tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted"><span class="spinner-border spinner-border-sm me-2 text-primary"></span>Adatok betöltése...</td></tr>`;
         fetch(APPS_SCRIPT_URL)
           .then(res => res.json())
