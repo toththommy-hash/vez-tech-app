@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7WEsB9nXpSBih9blFdnr2yhXeR356lyviaTUwMidnzdUTvCv5pNo3YfF1tQDYXqW4BA/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIzMptmRs-upSp6J_q9wcx77Tcf-vOGS9a1SWFLACKcvUgE-ntmFhew20yLeWuToG4_A/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -128,7 +128,7 @@
       vertical-align: middle;
     }
 
-    /* KULTURÁLT, ELEGÁNS STÁTUSZ BADGE-EK */
+    /* STÁTUSZ BADGE-EK (Elvégezve halványpiros) */
     .status-badge {
       font-size: 0.75rem;
       padding: 0.35em 0.75em;
@@ -139,7 +139,7 @@
 
     .badge-beerkezett { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
     .badge-folyamatban { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-    .badge-elvegezve { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-weight: 600; }
+    .badge-elvegezve { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 600; }
     .badge-intezkedes { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
     .badge-felfüggesztve { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; font-weight: 600; }
 
@@ -262,22 +262,25 @@
         left: 0 !important;
         top: 0 !important;
         width: 100% !important;
+        height: 100% !important;
         display: block !important;
         margin: 0 !important;
         padding: 0 !important;
       }
       @page {
         size: A4 landscape;
-        margin: 6mm;
+        margin: 4mm;
       }
     }
 
     .print-table-container {
       width: 100%;
+      max-height: 98vh;
       border: 2px solid #000;
       font-family: Arial, Helvetica, sans-serif;
       background: #fff;
       color: #000;
+      box-sizing: border-box;
     }
 
     .print-header-table {
@@ -288,7 +291,7 @@
 
     .print-header-table td {
       border-right: 1px solid #000;
-      padding: 6px 10px;
+      padding: 4px 8px;
       vertical-align: middle;
     }
 
@@ -303,19 +306,19 @@
 
     .print-main-table td, .print-main-table th {
       border: 1px solid #000;
-      padding: 6px 10px;
+      padding: 4px 8px;
       vertical-align: top;
     }
 
     .print-label {
       font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 3px;
+      font-size: 11px;
+      margin-bottom: 2px;
     }
 
     .print-value {
-      font-size: 14px;
-      min-height: 20px;
+      font-size: 13px;
+      min-height: 18px;
     }
   </style>
 </head>
@@ -707,7 +710,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-people me-1 text-primary"></i>Munkavégző(k) kiosztása / módosítása (Tiszta nevek)</label>
+              <label class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-people me-1 text-primary"></i>Munkavégző(k) kiosztása / módosítása</label>
               <div id="basisWarning" class="alert alert-secondary py-2 px-3 small d-none mb-2">
                 <i class="bi bi-pause-circle-fill me-1 text-secondary"></i><strong>Bázison van:</strong> Munkavégzés nem lehetséges, a műszerészek kiadása zárolva.
               </div>
@@ -826,18 +829,18 @@
     </div>
   </main>
 
-  <!-- LÁTHATATLAN NYOMTATÁSI TERÜLET (TMI404_NY07_V01 sablon) -->
+  <!-- LÁTHATATLAN NYOMTATÁSI TERÜLET (TMI404_NY07_V01 sablon - Pontosan 1 oldalra méretezve) -->
   <div id="printArea" class="d-none">
     <div class="print-table-container">
       <table class="print-header-table">
         <tr>
           <td style="width: 25%; text-align: center;">
-            <strong style="font-size: 16px; color: #002855;">MVM</strong> <span style="font-size: 10px;">Paksi Atomerőmű</span>
+            <strong style="font-size: 15px; color: #002855;">MVM</strong> <span style="font-size: 9px;">Paksi Atomerőmű</span>
           </td>
           <td style="width: 50%; text-align: center;">
-            <strong style="font-size: 18px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
+            <strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
           </td>
-          <td style="width: 25%; text-align: center; font-size: 12px; font-weight: bold;">
+          <td style="width: 25%; text-align: center; font-size: 11px; font-weight: bold;">
             TMI404_NY07_V01
           </td>
         </tr>
@@ -847,11 +850,11 @@
         <tr>
           <td style="width: 50%;">
             <div class="print-label">Alfanumerika:</div>
-            <div class="print-value" id="pAlfanumerika" style="font-weight: bold; font-size: 16px;">-</div>
+            <div class="print-value" id="pAlfanumerika" style="font-weight: bold; font-size: 15px;">-</div>
           </td>
           <td style="width: 50%;">
             <div class="print-label">MUT Feladat:</div>
-            <div class="print-value" id="pMut" style="font-weight: bold; font-size: 16px;">-</div>
+            <div class="print-value" id="pMut" style="font-weight: bold; font-size: 15px;">-</div>
           </td>
         </tr>
         <tr>
@@ -926,7 +929,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2" style="height: 65px;">
+          <td colspan="2" style="height: 45px;">
             <div class="print-label">Megjegyzés:</div>
             <div class="print-value" id="pMegjegyzes">-</div>
           </td>
@@ -934,7 +937,7 @@
       </table>
     </div>
 
-    <div style="font-size: 8px; display: flex; justify-content: space-between; margin-top: 4px; color: #333;">
+    <div style="font-size: 8px; display: flex; justify-content: space-between; margin-top: 3px; color: #333;">
       <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: <span id="pNyomtatasiDatum"></span></div>
       <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
       <div>1 / 1 oldal</div>
@@ -1544,7 +1547,7 @@
         window.print();
       }
 
-      // Gyors nyomtatás gomb a táblázatból
+      // Gyors nyomtatás gomb a táblázatból (Mostantól helyesen betölti az adatokat)
       window.quickPrint = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -1558,7 +1561,6 @@
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
 
-        // Frissítjük a sor koordinálóját a modalban kiválasztottra nyomtatás előtt
         row.rogzito = document.getElementById('updateRogzito').value;
 
         const munkav = document.getElementById('printMunkavezető').value;
