@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtgJCPzlm4obF4dFdRmnHRR78Dc8TdH136p1Y-hOEiS42EYSIRjA-G6xGm57aMXvT1_A/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj6-yg3ooO0XZkAGHwGDD4DCBkUZ4gxfp7D__im8DYgfaTQV0kZxB8da54IZ6QtCEZJA/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -63,7 +63,6 @@
       text-align: center;
     }
 
-    /* Fő Fejléc */
     .main-header {
       background: linear-gradient(135deg, #0b0f19 0%, #1e293b 100%);
       color: #ffffff;
@@ -128,7 +127,6 @@
       vertical-align: middle;
     }
 
-    /* STÁTUSZ BADGE-EK */
     .status-badge {
       font-size: 0.75rem;
       padding: 0.35em 0.75em;
@@ -213,7 +211,6 @@
       transform: scale(1.25);
     }
 
-    /* KATTINTHATÓ KPI KÁRTYÁK */
     .kpi-card {
       border-radius: 10px;
       padding: 1rem 1.2rem;
@@ -252,7 +249,7 @@
 </head>
 <body>
 
-  <!-- PIN Kód Védő Képernyő (Egyszerűsített, közvetlen űrlap) -->
+  <!-- PIN Kód Védő Képernyő -->
   <div id="pinOverlay">
     <div class="pin-card">
       <div class="text-primary fs-1 mb-3"><i class="bi bi-shield-lock-fill"></i></div>
@@ -753,10 +750,10 @@
   </div>
 
   <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.5net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // GLOBÁLIS PIN ELLENŐRZŐ (Biztosan lefut gombnyomásra és Enterre is)
+    // FÜGGETLEN PIN ELLENŐRZŐ (Nem függ semmilyen külső lemezművelettől vagy hálózattól)
     function checkPin(e) {
       if (e) e.preventDefault();
       const enteredPin = String(document.getElementById('pinInput').value).trim();
@@ -895,11 +892,15 @@
 
       window.allData = [];
 
-      // Adatok betöltése
+      // Biztonságos adatbetöltés CORS hiba kezeléssel
       window.loadData = function() {
         tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted"><span class="spinner-border spinner-border-sm me-2 text-primary"></span>Adatok betöltése...</td></tr>`;
-        fetch(APPS_SCRIPT_URL)
-          .then(res => res.json())
+        
+        fetch(APPS_SCRIPT_URL, { method: 'GET', mode: 'cors' })
+          .then(res => {
+            if (!res.ok) throw new Error('Szerver válasz hiba: ' + res.status);
+            return res.json();
+          })
           .then(data => {
             allData = data;
             filterData();
@@ -907,14 +908,18 @@
             updateDetailedStats(allData);
           })
           .catch(err => {
-            console.error('Hiba az adatok lekérésekor:', err);
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger"><i class="bi bi-exclamation-triangle me-1"></i>Hiba történt az adatok betöltése során.</td></tr>`;
+            console.error('Adatbetöltési hiba részletei:', err);
+            // Ha CORS vagy hálózati hiba van, hibaüzenetet mutat a táblázatban, de a belépés már megtörtént!
+            tableBody.innerHTML = `
+              <tr><td colspan="5" class="text-center py-4 text-danger">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i> <strong>Kommunikációs hiba a Google Apps Scripttel.</strong><br>
+                <small class="text-muted">Kérjük, ellenőrizd, hogy a Google Scriptben a "Ki férhet hozzá" beállítás <b>"Bárki" (Anyone)</b> értékre van-e állítva!</small>
+              </td></tr>`;
           });
       }
 
       refreshBtn.addEventListener('click', loadData);
 
-      // GYORS KPI SZŰRÉS LOGIKA
       window.quickFilterKpi = function(type) {
         currentKpiFilter = type;
         document.querySelectorAll('.kpi-card').forEach(card => card.classList.remove('active-kpi'));
@@ -936,7 +941,6 @@
         filterData();
       };
 
-      // KPI kártyák frissítése
       function updateKpiCounters(data) {
         if (!data) return;
         const total = data.length;
@@ -963,7 +967,6 @@
         document.getElementById('kpiElvegezve').textContent = elvegezveCount;
       }
 
-      // RÉSZLETES STATISZTIKA (BLOKK & MŰSZERÉSZ BONTÁS)
       function updateDetailedStats(data) {
         if (!data) return;
 
@@ -1008,7 +1011,6 @@
         document.getElementById('techStatsContainer').innerHTML = techHtml;
       }
 
-      // ÚJ MUT RÖGZÍTÉS
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -1059,7 +1061,6 @@
         });
       });
 
-      // Szűrés & Keresés logika
       function filterData() {
         const rawQuery = searchInput.value.trim().toLowerCase();
         const cleanQuery = rawQuery.replace(/[\/\s-]/g, '');
@@ -1104,7 +1105,6 @@
       });
       filterBlokk.addEventListener('change', filterData);
 
-      // Dátum tisztítása YYYY-MM-DD formátumra
       function normalizeDate(dateStr) {
         if (!dateStr) return '';
         let cleaned = String(dateStr).trim().replace(/\./g, '-').replace(/\s+/g, '');
@@ -1116,7 +1116,6 @@
         return cleaned;
       }
 
-      // Táblázat renderelése
       function renderTable(data) {
         if (!data || data.length === 0) {
           tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">Nincs megjeleníthető adat.</td></tr>`;
@@ -1237,7 +1236,6 @@
         });
       }
 
-      // Részletek megtekintése
       window.viewDetails = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -1264,7 +1262,6 @@
         detailsModal.show();
       };
 
-      // Dátum formázása HTML input[type="date"] mezőhöz
       function formatDateForInput(dateStr) {
         if (!dateStr) return '';
         let cleaned = String(dateStr).trim().replace(/\./g, '-').replace(/\s+/g, '');
@@ -1280,7 +1277,6 @@
         return dateStr;
       }
 
-      // Módosító modal megnyitása
       window.openUpdateModal = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -1318,7 +1314,6 @@
         updateStatusModal.show();
       };
 
-      // --- BIZTONSÁGOS IFRAME-ALAPÚ NYOMTATÁSI MOTOR ---
       function executePrint(printData) {
         const oldFrame = document.getElementById('printIframe');
         if (oldFrame) oldFrame.remove();
@@ -1525,7 +1520,6 @@
         doc.close();
       }
 
-      // Gyors nyomtatás gomb a táblázatból
       window.quickPrint = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -1556,7 +1550,6 @@
         executePrint(printData);
       };
 
-      // Nyomtatás a modal ablakból
       window.triggerFormPrint = function() {
         const rowIndex = document.getElementById('updateRowIndex').value;
         const row = allData.find(r => r.rowIndex == rowIndex);
@@ -1586,7 +1579,6 @@
         executePrint(printData);
       };
 
-      // MUT törlése PIN kóddal
       window.deleteRecord = function(rowIndex, mutNum) {
         const confirmPin = prompt(`A(z) ${mutNum} számú MUT törléséhez adja meg a törlési kód / PIN-t:`);
         if (confirmPin !== SITE_PIN) {
@@ -1613,7 +1605,6 @@
         });
       };
 
-      // Módosítás mentése
       const updateForm = document.getElementById('updateStatusForm');
       updateForm.addEventListener('submit', function(e) {
         e.preventDefault();
