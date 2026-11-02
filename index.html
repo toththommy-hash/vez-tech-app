@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzggjGhVjkj1csPZL7rp9h4cMV4Z2YyRxcKriYxbC4-v0ryD6JBV-BEJ7EGEZoADift1w/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7PhrUZ079O17f0Xxg_wVkfh9rX0Myf2SU_zAbSN48oErwRntgQPMgsSMr1v4UTbr1NA/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -520,15 +520,10 @@
             </div>
 
             <div class="mb-3">
-             <div class="mb-3">
-              <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-gear me-1 text-primary"></i>MUT Feladat Koordináló</label>
-              <select class="form-select fw-bold text-dark" id="updateRogzito" required>
-                <option value="" disabled selected>Válassza ki a koordinálót...</option>
-                <option value="Tóth Tamás">Tóth Tamás (85-37 / BRO1)</option>
-                <option value="Krasznai Iván">Krasznai Iván (75-91 / BRO1)</option>
-                <option value="Csötönyi Tamás">Csötönyi Tamás (69-37 / BRO1)</option>
-              </select>
-            </div>
+              <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-badge me-1 text-warning"></i>Módosító Neve</label>
+              <select class="form-select" id="updateRogzito" required>
+                <option value="" disabled selected>Válassza ki a nevét...</option>
+                <option value="Debreczeni Tibor">Debreczeni Tibor</option>
                 <option value="Inger József">Inger József</option>
                 <option value="Józsa Gábor">Józsa Gábor</option>
                 <option value="Krasznai Iván">Krasznai Iván</option>
@@ -558,115 +553,48 @@
                 <i class="bi bi-pause-circle-fill me-1 text-secondary"></i><strong>Bázison van:</strong> Munkavégzés nem lehetséges, a műszerészek kiadása zárolva.
               </div>
               <div class="tech-checkbox-list" id="updateMuszereszContainer">
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech1">Debreczeni Tibor (10179672)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox1">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Debreczeni Tibor" id="uLeader1">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader1">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1">
+                  <label class="form-check-label" for="uTech1">Debreczeni Tibor (10179672)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Inger József (10045721)" id="uTech2" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech2">Inger József (10045721)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox2">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Inger József" id="uLeader2">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader2">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Inger József (10045721)" id="uTech2">
+                  <label class="form-check-label" for="uTech2">Inger József (10045721)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="uTech3" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech3">Józsa Gábor (10201179)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox3">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Józsa Gábor" id="uLeader3">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader3">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="uTech3">
+                  <label class="form-check-label" for="uTech3">Józsa Gábor (10201179)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="uTech4" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech4">Krasznai Iván (10076817)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox4">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Krasznai Iván" id="uLeader4">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader4">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="uTech4">
+                  <label class="form-check-label" for="uTech4">Krasznai Iván (10076817)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="uTech5" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech5">Pálosi Attila (10152758)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox5">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Pálosi Attila" id="uLeader5">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader5">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="uTech5">
+                  <label class="form-check-label" for="uTech5">Pálosi Attila (10152758)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Péter (10233400)" id="uTech6" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech6">Tóth Péter (10233400)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox6">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Tóth Péter" id="uLeader6">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader6">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Péter (10233400)" id="uTech6">
+                  <label class="form-check-label" for="uTech6">Tóth Péter (10233400)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="uTech7" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech7">Tóth Tamás (10149403)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox7">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Tóth Tamás" id="uLeader7">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader7">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="uTech7">
+                  <label class="form-check-label" for="uTech7">Tóth Tamás (10149403)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Vonya István (10913705)" id="uTech8" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech8">Vonya István (10913705)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox8">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Vonya István" id="uLeader8">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader8">Munkavezető</label>
-                    <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="uTech9" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech9">Balázs Bálint (26001084)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox9">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Balázs Bálint" id="uLeader9">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader9">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Vonya István (10913705)" id="uTech8">
+                  <label class="form-check-label" for="uTech8">Vonya István (10913705)</label>
                 </div>
-
-                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input update-tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="uTech10" onchange="handleTechCheckChange()">
-                    <label class="form-check-label ms-2" for="uTech10">Kovács Szabolcs (10226025)</label>
-                  </div>
-                  <div class="form-check mb-0 d-none" id="leaderRadioBox10">
-                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Kovács Szabolcs" id="uLeader10">
-                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader10">Munkavezető</label>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="uTech9">
+                  <label class="form-check-label" for="uTech9">Balázs Bálint (26001084)</label>
                 </div>
-                  </div>
+                <div class="tech-checkbox-item">
+                  <input class="form-check-input update-tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="uTech10">
+                  <label class="form-check-label" for="uTech10">Kovács Szabolcs (10226025)</label>
                 </div>
               </div>
+            </div>
 
             <div class="mb-3">
               <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késői befejezés módosítása</label>
@@ -691,9 +619,7 @@
               <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. Mérés elvégezve, alkatrész cserélve..."></textarea>
               <div class="form-text text-muted small">Az ide beírt megjegyzés időbélyeggel és neveddel hozzáfűződik a korábbiakhoz.</div>
             </div>
-<button type="button" class="btn btn-outline-primary w-100 fw-bold py-2 mb-2 shadow-sm" onclick="triggerFormPrint()">
-                <i class="bi bi-printer me-1"></i>TMI404 Tábla Nyomtatása
-              </button>
+
             <button type="submit" class="btn btn-warning w-100 fw-bold py-2.5 shadow-sm">
               <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
             </button>
@@ -708,235 +634,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-     window.handleTechCheckChange = function() {
-        const techChecks = document.querySelectorAll('.update-tech-check');
-        let anyChecked = false;
-        let selectedLeaderExists = false;
-
-        techChecks.forEach((cb, idx) => {
-          const radioBox = document.getElementById(`leaderRadioBox${idx + 1}`);
-          const radioInput = document.getElementById(`uLeader${idx + 1}`);
-
-          if (!radioBox || !radioInput) return;
-
-          if (cb.checked) {
-            radioBox.classList.remove('d-none');
-            anyChecked = true;
-            if (radioInput.checked) selectedLeaderExists = true;
-          } else {
-            radioBox.classList.add('d-none');
-            radioInput.checked = false;
-          }
-        });
-
-        if (anyChecked && !selectedLeaderExists) {
-          for (let i = 0; i < techChecks.length; i++) {
-            if (techChecks[i].checked) {
-              const firstRadio = document.getElementById(`uLeader${i + 1}`);
-              if (firstRadio) {
-                firstRadio.checked = true;
-                break;
-              }
-            }
-// NYOMTATÁSI MOTOR ÉS SABLONOK (TMI404_NY07_V01)
-      window.executePrint = function(printData) {
-        const oldFrame = document.getElementById('printIframe');
-        if (oldFrame) oldFrame.remove();
-
-        const iframe = document.createElement('iframe');
-        iframe.id = 'printIframe';
-        iframe.style.position = 'fixed';
-        iframe.style.right = '0';
-        iframe.style.bottom = '0';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
-        iframe.style.border = 'none';
-        document.body.appendChild(iframe);
-
-        const today = new Date();
-        const formattedToday = today.getFullYear() + '. ' + String(today.getMonth()+1).padStart(2, '0') + '. ' + String(today.getDate()).padStart(2, '0') + '.';
-
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html lang="hu">
-          <head>
-            <meta charset="UTF-8">
-            <title>Munkaterület Azonosító Tábla - ${printData.mut}</title>
-            <style>
-              @page { size: A4 landscape; margin: 6mm; }
-              body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; background: #fff; color: #000; }
-              .print-container { width: 100%; max-width: 280mm; margin: 0 auto; border: 2px solid #000; box-sizing: border-box; }
-              .header-table { width: 100%; border-collapse: collapse; border-bottom: 2px solid #000; }
-              .header-table td { border-right: 1px solid #000; padding: 6px 10px; vertical-align: middle; }
-              .header-table td:last-child { border-right: none; }
-              .main-table { width: 100%; border-collapse: collapse; }
-              .main-table td { border: 1px solid #000; padding: 6px 10px; vertical-align: top; }
-              .field-label { font-weight: bold; font-size: 11px; margin-bottom: 3px; text-transform: uppercase; }
-              .field-value { font-size: 14px; font-weight: bold; min-height: 20px; }
-              .footer-text { font-size: 8px; display: flex; justify-content: space-between; margin-top: 4px; color: #222; }
-            </style>
-          </head>
-          <body>
-            <div class="print-container">
-              <table class="header-table">
-                <tr>
-                  <td style="width: 25%; text-align: center;"><strong style="font-size: 16px; color: #002855;">MVM</strong> <span style="font-size: 10px;">Paksi Atomerőmű</span></td>
-                  <td style="width: 50%; text-align: center;"><strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong></td>
-                  <td style="width: 25%; text-align: center; font-size: 11px; font-weight: bold;">TMI404_NY07_V01</td>
-                </tr>
-              </table>
-
-              <table class="main-table">
-                <tr>
-                  <td style="width: 50%;">
-                    <div class="field-label">Alfanumerika:</div>
-                    <div class="field-value" style="font-size: 16px; font-family: monospace;">${printData.alfanumerika}</div>
-                  </td>
-                  <td style="width: 50%;">
-                    <div class="field-label">MUT Feladat:</div>
-                    <div class="field-value" style="font-size: 16px; font-family: monospace; color: #002855;">${printData.mut}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width: 50%;">
-                    <div class="field-label">Felelős munkavezető:</div>
-                    <div class="field-value">${printData.munkavezető}</div>
-                  </td>
-                  <td style="width: 50%;">
-                    <div class="field-label">MUT Feladat koordináló:</div>
-                    <div class="field-value">${printData.koordináló}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width: 50%;">
-                    <table style="width: 100%; border: none;">
-                      <tr>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Telefon:</div>
-                          <div class="field-value">${printData.munkavTel}</div>
-                        </td>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Rádió:</div>
-                          <div class="field-value">${printData.munkavRadio}</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td style="width: 50%;">
-                    <table style="width: 100%; border: none;">
-                      <tr>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Telefon:</div>
-                          <div class="field-value">${printData.koordTel}</div>
-                        </td>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Rádió:</div>
-                          <div class="field-value">${printData.koordRadio}</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <div class="field-label">Munkát végző szervezet (cég):</div>
-                    <div class="field-value">${printData.ceg}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <div class="field-label">A munka megnevezése:</div>
-                    <div class="field-value" style="font-weight: normal;">${printData.munkaMegnevezes}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="width: 35%;">
-                    <div class="field-label">A munka tervezett időtartama:</div>
-                  </td>
-                  <td style="width: 65%;">
-                    <table style="width: 100%; border: none; text-align: center;">
-                      <tr>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Kezdés:</div>
-                          <div class="field-value">${printData.kezdes}</div>
-                        </td>
-                        <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Befejezés:</div>
-                          <div class="field-value">${printData.befejezes}</div>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="height: 45px;">
-                    <div class="field-label">Megjegyzés:</div>
-                    <div class="field-value" style="font-weight: bold; color: #b91c1c; font-size: 12px;">${printData.megjegyzes}</div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <div class="footer-text">
-              <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: ${formattedToday}</div>
-              <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
-              <div>1 / 1 oldal</div>
-            </div>
-
-            <script>
-              window.onload = function() {
-                setTimeout(function() { window.print(); }, 150);
-              };
-            </script>
-          </body>
-          </html>
-        `;
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(htmlContent);
-        doc.close();
-      };
-
-   window.triggerFormPrint = function() {
-        const rowIndex = document.getElementById('updateRowIndex').value;
-        const row = allData.find(r => r.rowIndex == rowIndex);
-        if (!row) return;
-
-        const koordNev = document.getElementById('updateRogzito').value || 'Tóth Tamás';
-        let koordTel = '85-37';
-        if (koordNev.includes('Krasznai')) koordTel = '75-91';
-        else if (koordNev.includes('Csötönyi')) koordTel = '69-37';
-
-        const selectedRadio = document.querySelector('.leader-radio:checked');
-        let leaderName = selectedRadio ? selectedRadio.value : 'Nincs megadva';
-
-        let megjText = 'Munkavégzés alatt, üzembehelyezés előtt bekapcsolni TILOS!';
-        if (row.megjegyzes && row.megjegyzes.trim().length > 0) {
-          megjText += ' | ' + row.megjegyzes;
-        }
-
-        const printData = {
-          mut: row.mut || '-',
-          alfanumerika: row.alfanumerika || '-',
-          munkavezető: leaderName,
-          koordináló: koordNev,
-          munkavTel: '85-37',
-          munkavRadio: 'BRO 1, 6',
-          koordTel: koordTel,
-          koordRadio: 'BRO1',
-          ceg: 'PA Zrt. BRO',
-          munkaMegnevezes: 'Kábelér kikötés, vez. tech. munkák miatt.',
-          kezdes: row.idobelyeg || '-',
-          befejezes: row.hatarido || '-',
-          megjegyzes: megjText
-        };
-
-        executePrint(printData);
-      };
-            
-
-      }; 
       
       const pinOverlay = document.getElementById('pinOverlay');
       const pinForm = document.getElementById('pinForm');
