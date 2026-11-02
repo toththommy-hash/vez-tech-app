@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzUc61x49ku_4VMe0-6ippAMY1QUUqixwu3kLJwb9nqjHak9uVFUriGtXNa7URMVU0iQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXLOjMb-L4QXJ4hSCiHr3kbDGnU_djaXgOu4jF6CezPGl77qGmxobpCwNQ4y77KwAO/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -588,6 +588,11 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       
+      // Kezdőállapotok és globális változók BIZTONSÁGOS inicializálása az elején
+      window.allData = [];
+      window.detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+      window.updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+
       const pinOverlay = document.getElementById('pinOverlay');
       const pinForm = document.getElementById('pinForm');
       const pinInput = document.getElementById('pinInput');
@@ -626,10 +631,6 @@
         "Balázs Bálint (26001084)",
         "Kovács Szabolcs (10226025)"
       ];
-
-      window.allData = [];
-      window.detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-      window.updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
 
       // Műszerészek dinamikus kirajzolása pipa + munkavezető rádiógomb kombinációval
       function renderTechCheckboxes() {
@@ -673,7 +674,6 @@
           }
         });
 
-        // Ha van kijelölt műszerész, de nincs még munkavezető pötty választva, az első bepipált legyen az
         if (anyChecked && !selectedLeaderExists) {
           for (let i = 0; i < techChecks.length; i++) {
             if (techChecks[i].checked) {
@@ -986,7 +986,7 @@
         updateStatusModal.show();
       };
 
-      // NYOMTATÁSI MOTOR (Munkaterület Azonosító Tábla TMI404_NY07_V01)
+      // NYOMTATÁSI MOTOR (Munkaterület Azonosító Tábla TMI404_NY07_V01)[cite: 1]
       function executePrint(printData) {
         const oldFrame = document.getElementById('printIframe');
         if (oldFrame) oldFrame.remove();
@@ -1081,10 +1081,10 @@
                     <strong style="font-size: 16px; color: #002855;">MVM</strong> <span style="font-size: 10px;">Paksi Atomerőmű</span>
                   </td>
                   <td style="width: 50%; text-align: center;">
-                    <strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>
+                    <strong style="font-size: 16px; text-transform: uppercase;">MUNKATERÜLET AZONOSÍTÓ TÁBLA</strong>[cite: 1]
                   </td>
                   <td style="width: 25%; text-align: center; font-size: 11px; font-weight: bold;">
-                    TMI404_NY07_V01
+                    TMI404_NY07_V01[cite: 1]
                   </td>
                 </tr>
               </table>
@@ -1092,21 +1092,21 @@
               <table class="main-table">
                 <tr>
                   <td style="width: 50%;">
-                    <div class="field-label">Alfanumerika:</div>
+                    <div class="field-label">Alfanumerika:</div>[cite: 1]
                     <div class="field-value" style="font-size: 16px; font-family: monospace;">${printData.alfanumerika}</div>
                   </td>
                   <td style="width: 50%;">
-                    <div class="field-label">MUT Feladat:</div>
+                    <div class="field-label">MUT Feladat:</div>[cite: 1]
                     <div class="field-value" style="font-size: 16px; font-family: monospace; color: #002855;">${printData.mut}</div>
                   </td>
                 </tr>
                 <tr>
                   <td style="width: 50%;">
-                    <div class="field-label">Felelős munkavezető:</div>
+                    <div class="field-label">Felelős munkavezető:</div>[cite: 1]
                     <div class="field-value">${printData.munkavezető}</div>
                   </td>
                   <td style="width: 50%;">
-                    <div class="field-label">MUT Feladat koordináló:</div>
+                    <div class="field-label">MUT Feladat koordináló:</div>[cite: 1]
                     <div class="field-value">${printData.koordináló}</div>
                   </td>
                 </tr>
@@ -1115,11 +1115,11 @@
                     <table style="width: 100%; border: none;">
                       <tr>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Telefon:</div>
+                          <div class="field-label">Telefon:</div>[cite: 1]
                           <div class="field-value">${printData.munkavTel}</div>
                         </td>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Rádió:</div>
+                          <div class="field-label">Rádió:</div>[cite: 1]
                           <div class="field-value">${printData.munkavRadio}</div>
                         </td>
                       </tr>
@@ -1129,11 +1129,11 @@
                     <table style="width: 100%; border: none;">
                       <tr>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Telefon:</div>
+                          <div class="field-label">Telefon:</div>[cite: 1]
                           <div class="field-value">${printData.koordTel}</div>
                         </td>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Rádió:</div>
+                          <div class="field-label">Rádió:</div>[cite: 1]
                           <div class="field-value">${printData.koordRadio}</div>
                         </td>
                       </tr>
@@ -1142,29 +1142,29 @@
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <div class="field-label">Munkát végző szervezet (cég):</div>
+                    <div class="field-label">Munkát végző szervezet (cég):</div>[cite: 1]
                     <div class="field-value">${printData.ceg}</div>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2">
-                    <div class="field-label">A munka megnevezése:</div>
+                    <div class="field-label">A munka megnevezése:</div>[cite: 1]
                     <div class="field-value" style="font-weight: normal;">${printData.munkaMegnevezes}</div>
                   </td>
                 </tr>
                 <tr>
                   <td style="width: 35%;">
-                    <div class="field-label">A munka tervezett időtartama:</div>
+                    <div class="field-label">A munka tervezett időtartama:</div>[cite: 1]
                   </td>
                   <td style="width: 65%;">
                     <table style="width: 100%; border: none; text-align: center;">
                       <tr>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Kezdés:</div>
+                          <div class="field-label">Kezdés:</div>[cite: 1]
                           <div class="field-value">${printData.kezdes}</div>
                         </td>
                         <td style="border: none; padding: 0; width: 50%;">
-                          <div class="field-label">Befejezés:</div>
+                          <div class="field-label">Befejezés:</div>[cite: 1]
                           <div class="field-value">${printData.befejezes}</div>
                         </td>
                       </tr>
@@ -1173,7 +1173,7 @@
                 </tr>
                 <tr>
                   <td colspan="2" style="height: 45px;">
-                    <div class="field-label">Megjegyzés:</div>
+                    <div class="field-label">Megjegyzés:</div>[cite: 1]
                     <div class="field-value" style="font-weight: bold; color: #b91c1c; font-size: 12px;">${printData.megjegyzes}</div>
                   </td>
                 </tr>
@@ -1181,9 +1181,9 @@
             </div>
 
             <div class="footer-text">
-              <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: ${formattedToday}</div>
-              <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>
-              <div>1 / 1 oldal</div>
+              <div>Fájl azonosító: TMI404_NY07_V01.doc<br>Nyomtatás dátuma: ${formattedToday}</div>[cite: 1]
+              <div style="text-align: center;">IBIR kat: 2 Üzleti belső használatra<br>Csak a nyomtatás napján érvényes, felhasználás esetén meg kell győződni az érvényességről.</div>[cite: 1]
+              <div>1 / 1 oldal</div>[cite: 1]
             </div>
 
             <script>
@@ -1197,7 +1197,6 @@
         doc.close();
       }
 
-      // Gyorsnyomtatás gomb a táblázat sorából
       window.quickPrint = function(rowIndex) {
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -1233,7 +1232,6 @@
         executePrint(printData);
       };
 
-      // Nyomtatás a szerkesztő ablakból (a kijelölt munkavezető pötty alapján)
       window.triggerFormPrint = function() {
         const rowIndex = document.getElementById('updateRowIndex').value;
         const row = allData.find(r => r.rowIndex == rowIndex);
