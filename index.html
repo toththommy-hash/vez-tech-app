@@ -631,26 +631,27 @@
         "Kovács Szabolcs (10226025)"
       ];
 
-      function renderTechCheckboxes() {
-        const container = document.getElementById('updateMuszereszContainer');
-        let html = '';
-        techList.forEach((tech, idx) => {
-          const nameOnly = tech.split(' (')[0];
-          html += `
-            <div class="tech-checkbox-item">
-              <div class="form-check mb-0">
-                <input class="form-check-input update-tech-check" type="checkbox" value="${tech}" id="uTech${idx}" onchange="handleTechCheckChange()">
-                <label class="form-check-label ms-2" for="uTech${idx}">${tech}</label>
-              </div>
-              <div class="form-check mb-0 d-none" id="leaderRadioBox${idx}">
-                <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="${nameOnly}" id="uLeader${idx}">
-                <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader${idx}">Munkavezető</label>
-              </div>
-            </div>
-          `;
-        });
-        container.innerHTML = html;
-      }
+     function renderTechCheckboxes() {
+  const container = document.getElementById('updateMuszereszContainer');
+  if (!container) return;
+  let html = '';
+  techList.forEach((tech, idx) => {
+    const nameOnly = tech.split(' (')[0];
+    html += `
+      <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+        <div class="form-check mb-0">
+          <input class="form-check-input update-tech-check" type="checkbox" value="${tech}" id="uTech${idx}" onchange="handleTechCheckChange()">
+          <label class="form-check-label ms-2" for="uTech${idx}">${tech}</label>
+        </div>
+        <div class="form-check mb-0 d-none" id="leaderRadioBox${idx}">
+          <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="${nameOnly}" id="uLeader${idx}">
+          <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader${idx}">Munkavezető</label>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
       renderTechCheckboxes();
 
       window.handleTechCheckChange = function() {
