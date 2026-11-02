@@ -738,9 +738,8 @@
                 break;
               }
             }
-          }
-        // NYOMTATÁSI MOTOR ÉS SABLONOK (TMI404_NY07_V01)
-      function executePrint(printData) {
+// NYOMTATÁSI MOTOR ÉS SABLONOK (TMI404_NY07_V01)
+      window.executePrint = function(printData) {
         const oldFrame = document.getElementById('printIframe');
         if (oldFrame) oldFrame.remove();
 
@@ -757,9 +756,7 @@
         const today = new Date();
         const formattedToday = today.getFullYear() + '. ' + String(today.getMonth()+1).padStart(2, '0') + '. ' + String(today.getDate()).padStart(2, '0') + '.';
 
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(`
+        const htmlContent = `
           <!DOCTYPE html>
           <html lang="hu">
           <head>
@@ -893,11 +890,15 @@
             </script>
           </body>
           </html>
-        `);
-        doc.close();
-      }
+        `;
 
-      window.triggerFormPrint = function() {
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+      };
+
+   window.triggerFormPrint = function() {
         const rowIndex = document.getElementById('updateRowIndex').value;
         const row = allData.find(r => r.rowIndex == rowIndex);
         if (!row) return;
@@ -933,6 +934,8 @@
 
         executePrint(printData);
       };
+            
+
       }; 
       
       const pinOverlay = document.getElementById('pinOverlay');
