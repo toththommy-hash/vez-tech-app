@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXLOjMb-L4QXJ4hSCiHr3kbDGnU_djaXgOu4jF6CezPGl77qGmxobpCwNQ4y77KwAO/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwf4WGaXRysmr0UotjkWGN_Fpfer4XEx6qmwSz0xph8lRSAS0K6VYkd5coT-LqI2WswKQ/exec";
     const SITE_PIN = "*963";
   </script>
 
@@ -570,7 +570,7 @@
 
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-dark fw-bold py-2.5 w-50" onclick="triggerFormPrint()">
-                <i class="bi bi-printer me-1"></i>Tábla Nyomtatása (TMI404)
+                <i class="bi bi-printer me-1"></i>Tábla Nyomtatása (TMI404)[cite: 1]
               </button>
               <button type="submit" class="btn btn-warning w-50 fw-bold py-2.5 shadow-sm">
                 <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
@@ -588,7 +588,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       
-      // Kezdőállapotok és globális változók BIZTONSÁGOS inicializálása az elején
       window.allData = [];
       window.detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
       window.updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
@@ -632,7 +631,6 @@
         "Kovács Szabolcs (10226025)"
       ];
 
-      // Műszerészek dinamikus kirajzolása pipa + munkavezető rádiógomb kombinációval
       function renderTechCheckboxes() {
         const container = document.getElementById('updateMuszereszContainer');
         let html = '';
@@ -684,7 +682,6 @@
         }
       };
 
-      // PIN ellenőrzés
       pinForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (pinInput.value.trim() === SITE_PIN) {
