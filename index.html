@@ -520,10 +520,15 @@
             </div>
 
             <div class="mb-3">
-              <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-badge me-1 text-warning"></i>Módosító Neve</label>
-              <select class="form-select" id="updateRogzito" required>
-                <option value="" disabled selected>Válassza ki a nevét...</option>
-                <option value="Debreczeni Tibor">Debreczeni Tibor</option>
+             <div class="mb-3">
+              <label for="updateRogzito" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-person-gear me-1 text-primary"></i>MUT Feladat Koordináló</label>
+              <select class="form-select fw-bold text-dark" id="updateRogzito" required>
+                <option value="" disabled selected>Válassza ki a koordinálót...</option>
+                <option value="Tóth Tamás">Tóth Tamás (85-37 / BRO1)</option>
+                <option value="Krasznai Iván">Krasznai Iván (75-91 / BRO1)</option>
+                <option value="Csötönyi Tamás">Csötönyi Tamás (69-37 / BRO1)</option>
+              </select>
+            </div>
                 <option value="Inger József">Inger József</option>
                 <option value="Józsa Gábor">Józsa Gábor</option>
                 <option value="Krasznai Iván">Krasznai Iván</option>
@@ -686,7 +691,9 @@
               <textarea class="form-control" id="updateNote" rows="2" placeholder="Pl. Mérés elvégezve, alkatrész cserélve..."></textarea>
               <div class="form-text text-muted small">Az ide beírt megjegyzés időbélyeggel és neveddel hozzáfűződik a korábbiakhoz.</div>
             </div>
-
+<button type="button" class="btn btn-outline-primary w-100 fw-bold py-2 mb-2 shadow-sm" onclick="triggerFormPrint()">
+                <i class="bi bi-printer me-1"></i>TMI404 Tábla Nyomtatása
+              </button>
             <button type="submit" class="btn btn-warning w-100 fw-bold py-2.5 shadow-sm">
               <i class="bi bi-check2-circle me-1"></i>Adatok Frissítése
             </button>
