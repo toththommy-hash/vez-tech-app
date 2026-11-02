@@ -553,48 +553,115 @@
                 <i class="bi bi-pause-circle-fill me-1 text-secondary"></i><strong>Bázison van:</strong> Munkavégzés nem lehetséges, a műszerészek kiadása zárolva.
               </div>
               <div class="tech-checkbox-list" id="updateMuszereszContainer">
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1">
-                  <label class="form-check-label" for="uTech1">Debreczeni Tibor (10179672)</label>
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Debreczeni Tibor (10179672)" id="uTech1" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech1">Debreczeni Tibor (10179672)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox1">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Debreczeni Tibor" id="uLeader1">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader1">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Inger József (10045721)" id="uTech2">
-                  <label class="form-check-label" for="uTech2">Inger József (10045721)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Inger József (10045721)" id="uTech2" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech2">Inger József (10045721)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox2">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Inger József" id="uLeader2">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader2">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="uTech3">
-                  <label class="form-check-label" for="uTech3">Józsa Gábor (10201179)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Józsa Gábor (10201179)" id="uTech3" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech3">Józsa Gábor (10201179)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox3">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Józsa Gábor" id="uLeader3">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader3">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="uTech4">
-                  <label class="form-check-label" for="uTech4">Krasznai Iván (10076817)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Krasznai Iván (10076817)" id="uTech4" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech4">Krasznai Iván (10076817)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox4">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Krasznai Iván" id="uLeader4">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader4">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="uTech5">
-                  <label class="form-check-label" for="uTech5">Pálosi Attila (10152758)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Pálosi Attila (10152758)" id="uTech5" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech5">Pálosi Attila (10152758)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox5">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Pálosi Attila" id="uLeader5">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader5">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Péter (10233400)" id="uTech6">
-                  <label class="form-check-label" for="uTech6">Tóth Péter (10233400)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Péter (10233400)" id="uTech6" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech6">Tóth Péter (10233400)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox6">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Tóth Péter" id="uLeader6">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader6">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="uTech7">
-                  <label class="form-check-label" for="uTech7">Tóth Tamás (10149403)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Tóth Tamás (10149403)" id="uTech7" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech7">Tóth Tamás (10149403)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox7">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Tóth Tamás" id="uLeader7">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader7">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Vonya István (10913705)" id="uTech8">
-                  <label class="form-check-label" for="uTech8">Vonya István (10913705)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Vonya István (10913705)" id="uTech8" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech8">Vonya István (10913705)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox8">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Vonya István" id="uLeader8">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader8">Munkavezető</label>
+                    <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="uTech9" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech9">Balázs Bálint (26001084)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox9">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Balázs Bálint" id="uLeader9">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader9">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Balázs Bálint (26001084)" id="uTech9">
-                  <label class="form-check-label" for="uTech9">Balázs Bálint (26001084)</label>
+
+                <div class="tech-checkbox-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input update-tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="uTech10" onchange="handleTechCheckChange()">
+                    <label class="form-check-label ms-2" for="uTech10">Kovács Szabolcs (10226025)</label>
+                  </div>
+                  <div class="form-check mb-0 d-none" id="leaderRadioBox10">
+                    <input class="form-check-input leader-radio" type="radio" name="leaderTechRadio" value="Kovács Szabolcs" id="uLeader10">
+                    <label class="form-check-label small fw-bold text-primary ms-1" for="uLeader10">Munkavezető</label>
+                  </div>
                 </div>
-                <div class="tech-checkbox-item">
-                  <input class="form-check-input update-tech-check" type="checkbox" value="Kovács Szabolcs (10226025)" id="uTech10">
-                  <label class="form-check-label" for="uTech10">Kovács Szabolcs (10226025)</label>
+                  </div>
                 </div>
               </div>
-            </div>
 
             <div class="mb-3">
               <label for="updateHatarido" class="form-label fw-semibold small text-muted text-uppercase">Késői befejezés módosítása</label>
@@ -634,6 +701,39 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+     window.handleTechCheckChange = function() {
+        const techChecks = document.querySelectorAll('.update-tech-check');
+        let anyChecked = false;
+        let selectedLeaderExists = false;
+
+        techChecks.forEach((cb, idx) => {
+          const radioBox = document.getElementById(`leaderRadioBox${idx + 1}`);
+          const radioInput = document.getElementById(`uLeader${idx + 1}`);
+
+          if (!radioBox || !radioInput) return;
+
+          if (cb.checked) {
+            radioBox.classList.remove('d-none');
+            anyChecked = true;
+            if (radioInput.checked) selectedLeaderExists = true;
+          } else {
+            radioBox.classList.add('d-none');
+            radioInput.checked = false;
+          }
+        });
+
+        if (anyChecked && !selectedLeaderExists) {
+          for (let i = 0; i < techChecks.length; i++) {
+            if (techChecks[i].checked) {
+              const firstRadio = document.getElementById(`uLeader${i + 1}`);
+              if (firstRadio) {
+                firstRadio.checked = true;
+                break;
+              }
+            }
+          }
+        }
+      }; 
       
       const pinOverlay = document.getElementById('pinOverlay');
       const pinForm = document.getElementById('pinForm');
