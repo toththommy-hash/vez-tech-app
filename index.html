@@ -274,22 +274,30 @@
             
             <form id="mUKForm">
               
-              <div class="mb-3">
-                <label for="rogzito" class="form-label fw-semibold small text-muted text-uppercase">Rögzítő Neve</label>
-                <select class="form-select" id="rogzito" required>
-                  <option value="" disabled selected>Válassza ki a nevét...</option>
-                  <option value="Debreczeni Tibor">Debreczeni Tibor</option>
-                  <option value="Inger József">Inger József</option>
-                  <option value="Józsa Gábor">Józsa Gábor</option>
-                  <option value="Krasznai Iván">Krasznai Iván</option>
-                  <option value="Pálosi Attila">Pálosi Attila</option>
-                  <option value="Tóth Péter">Tóth Péter</option>
-                  <option value="Tóth Tamás">Tóth Tamás</option>
-                  <option value="Vonya István">Vonya István</option>
-                  <option value="Balázs Bálint">Balázs Bálint</option>
-                  <option value="Kovács Szabolcs">Kovács Szabolcs</option>
-                </select>
-              </div>
+            <div class="mb-3">
+  <label for="koordinalo"
+    class="form-label fw-semibold small text-muted text-uppercase">
+
+    Koordináló
+
+  </label>
+
+  <select class="form-select" id="koordinalo">
+
+    <option value="Tóth Tamás (85-37)" selected>
+      Tóth Tamás (85-37)
+    </option>
+
+    <option value="Krasznai Iván (75-91)">
+      Krasznai Iván (75-91)
+    </option>
+
+    <option value="Csötönyi Tamás (69-37)">
+      Csötönyi Tamás (69-37)
+    </option>
+
+  </select>
+</div>
 
               <div class="mb-3">
                 <label for="alfanumerika" class="form-label fw-semibold small text-muted text-uppercase">Alfanumerika <span class="text-danger">*</span></label>
@@ -304,7 +312,7 @@
                   <option value="2">2. Blokk</option>
                   <option value="3">3. Blokk</option>
                   <option value="4">4. Blokk</option>
-                  <option value="Közös">Közös Terület</option>
+                  <option value="Segédépület">Közös Terület</option>
                 </select>
               </div>
 
@@ -330,7 +338,23 @@
               <div class="mb-3">
                 <label for="hatarido" class="form-label fw-semibold small text-muted text-uppercase"><i class="bi bi-calendar-event me-1 text-danger"></i>Késői befejezés <span class="text-danger">*</span></label>
                 <input type="date" class="form-control" id="hatarido" required>
-              </div>
+           <div class="mb-3">
+
+  <label
+    for="munkaMegnevezese"
+    class="form-label fw-semibold small text-muted text-uppercase">
+
+    Munka megnevezése
+
+  </label>
+
+  <input
+    type="text"
+    class="form-control"
+    id="munkaMegnevezese"
+    value="Átalakítás miatt kábelér kikötés">
+
+</div>
 
               <div class="mb-3 switch-box">
                 <div class="form-check form-switch mb-2">
@@ -391,7 +415,7 @@
                   <option value="2">2. Blokk</option>
                   <option value="3">3. Blokk</option>
                   <option value="4">4. Blokk</option>
-                  <option value="Közös">Közös Terület</option>
+                  <option value="Segédépület">Közös Terület</option>
                 </select>
               </div>
             </div>
@@ -773,6 +797,11 @@
         const formData = {
           action: 'create',
           rogzito: document.getElementById('rogzito').value,
+          koordinalo:
+document.getElementById('koordinalo').value,
+          
+munkaMegnevezese:
+document.getElementById('munkaMegnevezese').value,
           alfanumerika: alfanumerikaInput.value,
           blokk: blokkSelect.value,
           muszeresz: '',
@@ -798,6 +827,11 @@
           btnText.classList.remove('d-none');
           btnSpinner.classList.add('d-none');
           form.reset();
+          document.getElementById('koordinalo').value =
+'Tóth Tamás (85-37)';
+
+document.getElementById('munkaMegnevezese').value =
+'Átalakítás miatt kábelér kikötés';
           document.getElementById('newStatuszCreate').value = 'Beérkezett';
           ciklusSwitch.checked = false;
           utemezesDatumBox.classList.add('d-none');
